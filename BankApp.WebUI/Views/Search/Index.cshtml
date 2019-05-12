@@ -1,0 +1,35 @@
+﻿@model BankApp.Application.Customers.Queries.GetCustomersListSearch.CustomersListViewModel
+@using ReflectionIT.Mvc.Paging
+@addTagHelper *, ReflectionIT.Mvc.Paging
+
+@*<nav>
+        @await this.Component.InvokeAsync("Pager", new { pagingList = this.Model.Customers})
+    </nav>*@
+
+
+
+<table class="striped responsive-table">
+    <thead>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Customers)
+        {
+            <tr>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+<form asp-controller="Search" asp-action="index" asp-route-searchInput="@Model.SearchInput" method="get">
+    <vc:pager paging-list="@Model.Customers"></vc:pager>
+    <input type="hidden" name="searchInput" value="@Model.SearchInput" />
+</form>
+
