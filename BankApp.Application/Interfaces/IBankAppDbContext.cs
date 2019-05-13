@@ -10,8 +10,10 @@ namespace BankApp.Application.Interfaces
 {
     public interface IBankAppDbContext
     {
-        DbSet<Customer> Customers { get; set; }
         DbSet<Account> Accounts { get; set; }
+        DbSet<Customer> Customers { get; set; }
+        DbSet<Disposition> Dispositions { get; set; }
+        DbSet<Transaction> Transactions { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

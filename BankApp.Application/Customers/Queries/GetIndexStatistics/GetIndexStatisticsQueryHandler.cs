@@ -25,7 +25,7 @@ namespace BankApp.Application.Customers.Queries.GetIndexStatistics
 
             model.NumberOfCustomers = await _context.Customers.CountAsync();
             model.NumberOfAccounts = await _context.Accounts.CountAsync();
-            model.TotalBalance = await _context.Accounts.SumAsync(a => a.Balance);
+            model.TotalBalance = await _context.Accounts.SumAsync(a => a.Amount);
 
             return model;
         }

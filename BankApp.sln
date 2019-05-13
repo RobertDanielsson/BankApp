@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankApp.Domain", "BankApp.Domain\BankApp.Domain.csproj", "{9395F274-2FC6-4685-818D-B8E0123A5ACB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankApp.Domain", "BankApp.Domain\BankApp.Domain.csproj", "{9395F274-2FC6-4685-818D-B8E0123A5ACB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankApp.Persistence", "BankApp.Persistence\BankApp.Persistence.csproj", "{3970CD69-00BF-491F-85C1-64090A56E8B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankApp.Persistence", "BankApp.Persistence\BankApp.Persistence.csproj", "{3970CD69-00BF-491F-85C1-64090A56E8B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankApp.Application", "BankApp.Application\BankApp.Application.csproj", "{DF220640-1364-49BB-9568-FD8CF8B71377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankApp.Application", "BankApp.Application\BankApp.Application.csproj", "{DF220640-1364-49BB-9568-FD8CF8B71377}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankApp.WebUI", "BankApp.WebUI\BankApp.WebUI.csproj", "{5022974C-EE69-47C2-A6AF-C88BDC5758D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankApp.WebUI", "BankApp.WebUI\BankApp.WebUI.csproj", "{5022974C-EE69-47C2-A6AF-C88BDC5758D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

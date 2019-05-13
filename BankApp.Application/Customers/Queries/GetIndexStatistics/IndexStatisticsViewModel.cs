@@ -8,6 +8,6 @@ namespace BankApp.Application.Customers.Queries.GetIndexStatistics
     {
         public int NumberOfCustomers { get; set; }
         public int NumberOfAccounts { get; set; }
-        public decimal TotalBalance { get; set; }
+        public decimal? TotalBalance { get; set; }
     }
 }

@@ -24,12 +24,12 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
         public async Task<CustomersListViewModel> Handle(GetCustomersListQuery request, CancellationToken cancellationToken)
         {
             var model = new CustomersListViewModel();
-            var result = _context.Customers.AsNoTracking().Where(c => c.FirstName.Contains(request.SearchInput)).OrderBy(c => c.Id);
-            model.Customers = await PagingList.CreateAsync(result, 10, request.Page);
-            model.Customers.RouteValue = new RouteValueDictionary
-            {
-                {"searchInput", request.SearchInput }
-            };
+            //var result = _context.Customers.AsNoTracking().Where(c => c.FirstName.Contains(request.SearchInput)).OrderBy(c => c.Id);
+            //model.Customers = await PagingList.CreateAsync(result, 10, request.Page);
+            //model.Customers.RouteValue = new RouteValueDictionary
+            //{
+            //    {"searchInput", request.SearchInput }
+            //};
 
             return model;
         }

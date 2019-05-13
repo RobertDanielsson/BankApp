@@ -38,6 +38,7 @@ namespace BankApp.WebUI
                     Configuration.GetConnectionString("DefaultConnection"));
             });
 
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<BankAppDbContext>()
                 .AddDefaultTokenProviders();

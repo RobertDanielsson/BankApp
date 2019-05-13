@@ -22,14 +22,14 @@ namespace BankApp.Application.Customers.Commands.CreateCustomers
         {
             Random rnd = new Random();
 
-            for (int i = 0; i < 50; i++)
-            {
-                var newUser = new Customer { FirstName = "Ellinore", LastName = "Danielsson" };
-                var newAccount = new Account { AccountNumber = rnd.Next(1, 500).ToString(), Balance = 50, Customer = newUser };
-                _context.Customers.Add(newUser);
-                _context.Accounts.Add(newAccount);
-            }
-            await _context.SaveChangesAsync(cancellationToken);
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    var newUser = new Customer { f = "Ellinore", LastName = "Danielsson" };
+            //    var newAccount = new Account { AccountNumber = rnd.Next(1, 500).ToString(), Balance = 50, Customer = newUser };
+            //    _context.Customers.Add(newUser);
+            //    _context.Accounts.Add(newAccount);
+            //}
+            //await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }
