@@ -21,11 +21,26 @@ namespace BankApp.WebUI.Controllers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Index(string searchInput, int page=1)
+        public async Task<IActionResult> Index(GetCustomersListQuery test)
         {
-            var model = await _mediator.Send(new GetCustomersListQuery { SearchInput = searchInput, Page = page });
-            model.SearchInput = searchInput;
-            return View(model);
+            //if (ModelState.IsValid)
+            //{
+            if (int.TryParse(test.SearchInput, out int customerId))
+            {
+
+            }
+            else
+            {
+                var model = await _mediator.Send(new GetCustomersListQuery { SearchInput = test.SearchInput, Page = test.Page });
+                return View(model);
+            }
+              
+            //}
+            //else
+            //{
+            //    return NoContent();
+            //}
+            
         }
     }
 }

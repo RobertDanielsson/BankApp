@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -21,11 +22,31 @@ namespace BankApp.Application.Customers.Queries.GetIndexStatistics
 
         public async Task<IndexStatisticsViewModel> Handle(GetIndexStatisticsQuery request, CancellationToken cancellationToken)
         {
-            var model = new IndexStatisticsViewModel();
+            //var model = new IndexStatisticsViewModel();
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            //model.NumberOfCustomers = await _context.Customers.CountAsync();
+            //model.NumberOfAccounts = await _context.Accounts.CountAsync();
+            //model.TotalBalance = await _context.Accounts.SumAsync(a => a.Amount);
+            //var test = _context.Customers
+            //    .Include(c => c.Dispositions)
+            //    .ThenInclude(d => d.Account)
+            //    .Select(b => new IndexStatisticsViewModel
+            //    {
+            //        NumberOfCustomers = c.Count()
+            //    })
 
-            model.NumberOfCustomers = await _context.Customers.CountAsync();
-            model.NumberOfAccounts = await _context.Accounts.CountAsync();
-            model.TotalBalance = await _context.Accounts.SumAsync(a => a.Amount);
+            var model = await _context.Customers.DefaultIfEmpty().Select(t => new IndexStatisticsViewModel
+            {
+                NumberOfCustomers = _context.Customers.Count(),
+                NumberOfAccounts = _context.Accounts.Count(),
+                TotalBalance = _context.Accounts.Sum(a => a.Balance)
+            }).FirstAsync();
+
+
+
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds + "ms");
 
             return model;
         }

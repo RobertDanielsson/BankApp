@@ -9,7 +9,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 {
     public class CustomersListViewModel
     {
-        public PagingList<Customer> Customers { get; set; }
+        public PagingList<GetCustomerListDTO> Customers { get; set; } 
         public string SearchInput { get; set; }
     }
 }

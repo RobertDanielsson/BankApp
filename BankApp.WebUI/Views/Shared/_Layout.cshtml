@@ -22,19 +22,21 @@
 <body>
     <header>
         @*<partial name="_Navbar" />*@
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">Logo</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                    <li><a asp-route="search_index">Search</a></li>
+                </ul>
+            </div>
+        </nav>
     </header>
     <div class="container">
         @*<partial name="_StatusMessages" />*@
         <main role="main">
             <div class="container">
-                <div class="row">
-                    <div class="col s12">
-                        <form method="get" asp-controller="search" asp-action="index">
-                            <input name="searchInput" class="form-control" placeholder="filter" />
-                            <button type="submit" class="btn btn-info">Search</button>
-                        </form>
-                    </div>
-                </div>
+                
                 <div class="row">
                     <div class="col s12">
                         <h5 class="center page-title">@ViewData["Title"]</h5>

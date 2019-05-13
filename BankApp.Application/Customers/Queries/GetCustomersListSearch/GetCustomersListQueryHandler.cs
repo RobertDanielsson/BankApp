@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ReflectionIT.Mvc.Paging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -23,7 +24,34 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 
         public async Task<CustomersListViewModel> Handle(GetCustomersListQuery request, CancellationToken cancellationToken)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             var model = new CustomersListViewModel();
+            var result = _context.Customers.AsNoTracking().Where(c => c.Givenname.StartsWith(request.SearchInput) || c.City.StartsWith(request.SearchInput))
+                .Distinct()
+                .Select(s => new GetCustomerListDTO
+                {
+                    CustomerId = s.CustomerId.ToString(),
+                    Birthdate = s.Birthday.ToString(),
+                    Name = s.Givenname + " " + s.Surname,
+                    Streetaddress = s.Streetaddress,
+                    City = s.City,
+                    Zipcode = s.Zipcode,
+                    Country = s.Country
+
+                })
+                .OrderBy(c => c.CustomerId);
+
+            model.Customers = await PagingList.CreateAsync(result, 10, request.Page);
+            model.Customers.RouteValue = new RouteValueDictionary
+            {
+                {"searchInput", request.SearchInput }
+            };
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds + "ms");
+            return model;
+
+            //var model = new CustomersListViewModel();
             //var result = _context.Customers.AsNoTracking().Where(c => c.FirstName.Contains(request.SearchInput)).OrderBy(c => c.Id);
             //model.Customers = await PagingList.CreateAsync(result, 10, request.Page);
             //model.Customers.RouteValue = new RouteValueDictionary
@@ -31,7 +59,9 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
             //    {"searchInput", request.SearchInput }
             //};
 
-            return model;
+            //return model;
+
+
         }
     }
 }

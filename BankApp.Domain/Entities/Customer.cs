@@ -19,10 +19,10 @@ namespace BankApp.Domain.Entities
         public string Zipcode { get; set; }
         public string Country { get; set; }
         public string CountryCode { get; set; }
+        public DateTime? Birthday { get; set; }
         public string NationalId { get; set; }
-        public DateTime Birthday { get; set; }
+        public string Telephonecountrycode { get; set; }
         public string Telephonenumber { get; set; }
-        public int Telephonecountrycode { get; set; }
         public string Emailaddress { get; set; }
 
         public virtual ICollection<Disposition> Dispositions { get; set; }

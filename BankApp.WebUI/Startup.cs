@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using BankApp.Application.Customers.Queries.GetCustomersListSearch;
 using BankApp.Application.Customers.Queries.GetIndexStatistics;
 using BankApp.Application.Identity;
 using BankApp.Application.Interfaces;
 using BankApp.Persistence;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,21 +40,25 @@ namespace BankApp.WebUI
                     Configuration.GetConnectionString("DefaultConnection"));
             });
 
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<BankAppDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 4;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+            }).AddEntityFrameworkStores<BankAppDbContext>();
 
             services.AddScoped(typeof(IBankAppDbContext), typeof(BankAppDbContext));
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetCustomersListQueryValidator>());
 
-            //services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddMediatR(typeof(GetIndexStatisticsQueryHandler).GetTypeInfo().Assembly);
             services.AddPaging(options =>
             {
                 options.ViewName = "CustomPager";
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,10 +70,18 @@ namespace BankApp.WebUI
             }
 
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
-             
+                routes.MapRoute(
+                      name: "search_index",
+                      template: "Search",
+                      defaults: new
+                      {
+                          Controller = "Search",
+                          Action = "Index"
+                      });
 
                 routes.MapRoute(
                     name: "default",

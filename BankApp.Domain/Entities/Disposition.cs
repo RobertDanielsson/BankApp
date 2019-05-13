@@ -5,6 +5,11 @@ namespace BankApp.Domain.Entities
 {
     public partial class Disposition
     {
+        public Disposition()
+        {
+            Cards = new HashSet<Card>();
+        }
+
         public int DispositionId { get; set; }
         public int CustomerId { get; set; }
         public int AccountId { get; set; }
@@ -12,5 +17,6 @@ namespace BankApp.Domain.Entities
 
         public virtual Account Account { get; set; }
         public virtual Customer Customer { get; set; }
+        public virtual ICollection<Card> Cards { get; set; }
     }
 }
