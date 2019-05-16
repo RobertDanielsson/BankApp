@@ -1,0 +1,52 @@
+﻿@model BankApp.Application.Customers.Queries.GetAccountTransferData.GetAccountTransferDataViewModel
+
+<div class="row">
+    <div class="col s12">
+        <div class="row">
+            <div class="col s12 center">
+                <h1>Transfer</h1>
+                <h4>@Model.Customer.Name</h4>
+            </div>
+        </div>
+
+        <form asp-route="customer_transfer" method="post">
+            <div class="row">
+                <div class="col s12">
+                    <div class="z-depth-1 col m5 s12">
+                        <h6>Select an account and amount</h6>
+                        <select name="SenderAccountId" asp-items="Model.Accounts"></select>
+                        <input name="Amount" />
+                        <input type="hidden" value="@Model.Customer.CustomerId" />
+                    </div>
+                    <div class="col m2">
+
+                    </div>
+                    <div class="z-depth-1 col m5 s12" style="padding-bottom:18px;">
+                        <h6>Reciever account id</h6>
+                        <input type="text" name="RecieverAccountId" />
+                        <button class="waves-effect waves-light btn" type="submit">Transfer</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div asp-validation-summary="All"></div>
+        <div class="row">
+            <div class="col s12">
+                <a asp-route="customer_details" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Go back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+    });
+
+    // Or with jQuery
+
+    $(document).ready(function () {
+        $('select').formSelect();
+    });
+</script>

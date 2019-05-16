@@ -1,0 +1,122 @@
+﻿@model BankApp.Application.Transactions.Queries.GetAccountStatistics.GetAccountStatisticsViewModel
+@using System.Globalization
+
+<div class="row">
+    <div class="col s12">
+
+        <div class="row">
+            <div class="col s12">
+                <h4>Account id: @Model.Account.AccountId</h4>
+                <h6>Created: @Model.Account.Created.ToShortDateString()</h6>
+                <h6>Balance: @Model.Account.Balance.ToString("C", CultureInfo.CurrentCulture)</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <a asp-route="customer_details" asp-route-customerId="1" class="waves-effect waves-light btn">Go back</a>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12">
+
+                <table class="striped responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Transaction Id</th>
+                            <th>Account Id</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Operation</th>
+                            <th>Amount</th>
+                            <th>Balance</th>
+                            <th>Symbol</th>
+                            <th>Bank</th>
+                            <th>Account</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="myTable">
+                        @foreach (var transaction in Model.Transactions)
+                        {
+                            <tr>
+                                <td>
+                                    @transaction.TransactionId
+                                </td>
+                                <td>
+                                    @transaction.AccountId
+                                </td>
+                                <td>
+                                    @transaction.Date.ToShortDateString()
+                                </td>
+                                <td>
+                                    @transaction.Type
+                                </td>
+                                <td>
+                                    @transaction.Operation
+                                </td>
+                                <td>
+                                    @transaction.Amount.ToString("C", CultureInfo.CurrentCulture)
+                                </td>
+                                <td>
+                                    @transaction.Balance.ToString("C", CultureInfo.CurrentCulture)
+                                </td>
+                                <td>
+                                    @transaction.Symbol
+                                </td>
+                                <td>
+                                    @transaction.Bank
+                                </td>
+                                <td>
+                                    @transaction.Account
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+                <button asp-action="LoadTransactions" asp-controller="Account" id="getTransactions" class="waves-effect waves-light btn">Load transactions</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(() => {
+        var page = 1;
+
+        $("#getTransactions").on("click", () => {
+        $.getJSON("/account/getadditionaltransactions", {
+            accountId: @Model.Account.AccountId,
+            page: page++
+        })
+         .done( (data) => {
+             $.each(data, function (index, item) {
+                 $("#myTable").append(`
+                    <tr>
+                    <td>${item.transactionId}</td>
+                    <td>${item.accountId}</td>
+                    <td>${item.date.substring(0, 10)}</td>
+                    <td>${item.type}</td>
+                    <td>${item.operation}</td>
+                    <td>${formatter.format(item.amount)}</td>
+                    <td>${formatter.format(item.balance)}</td>
+                    <td>${item.symbol}</td>
+                    <td>${item.bank}</td>
+                    <td>${item.account}</td>
+                    </tr>`)
+                })
+            })
+        })
+
+        const formatter = new Intl.NumberFormat('sv-SE', {
+        style: 'currency',
+         currency: 'SEK',
+        minimumFractionDigits: 2
+        })
+
+    })
+</script>

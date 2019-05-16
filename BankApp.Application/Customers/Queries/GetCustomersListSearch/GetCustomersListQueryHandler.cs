@@ -1,4 +1,5 @@
-﻿using BankApp.Application.Interfaces;
+﻿using BankApp.Application.DTO;
+using BankApp.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -29,10 +30,10 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
             var model = new CustomersListViewModel();
             var result = _context.Customers.AsNoTracking().Where(c => c.Givenname.StartsWith(request.SearchInput) || c.City.StartsWith(request.SearchInput))
                 .Distinct()
-                .Select(s => new GetCustomerListDTO
+                .Select(s => new CustomerDTO
                 {
                     CustomerId = s.CustomerId.ToString(),
-                    Birthdate = s.Birthday.ToString(),
+                    Birthdate = s.Birthday.Value.ToShortDateString(),
                     Name = s.Givenname + " " + s.Surname,
                     Streetaddress = s.Streetaddress,
                     City = s.City,
@@ -42,7 +43,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
                 })
                 .OrderBy(c => c.CustomerId);
 
-            model.Customers = await PagingList.CreateAsync(result, 10, request.Page);
+            model.Customers = await PagingList.CreateAsync(result, 50, request.Page);
             model.Customers.RouteValue = new RouteValueDictionary
             {
                 {"searchInput", request.SearchInput }

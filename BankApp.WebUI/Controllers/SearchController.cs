@@ -23,24 +23,23 @@ namespace BankApp.WebUI.Controllers
 
         public async Task<IActionResult> Index(GetCustomersListQuery test)
         {
-            //if (ModelState.IsValid)
-            //{
+
             if (int.TryParse(test.SearchInput, out int customerId))
             {
-
+                return RedirectToAction("Index", "Customer", new { customerId = customerId });
             }
             else
             {
-                var model = await _mediator.Send(new GetCustomersListQuery { SearchInput = test.SearchInput, Page = test.Page });
-                return View(model);
+                if (ModelState.IsValid)
+                {
+                    var model = await _mediator.Send(new GetCustomersListQuery { SearchInput = test.SearchInput, Page = test.Page });
+                    return View(model);
+                }
+                else
+                {
+                    return NoContent();
+                }
             }
-              
-            //}
-            //else
-            //{
-            //    return NoContent();
-            //}
-            
         }
     }
 }

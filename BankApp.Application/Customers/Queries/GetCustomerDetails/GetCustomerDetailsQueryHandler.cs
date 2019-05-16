@@ -21,17 +21,62 @@ namespace BankApp.Application.Customers.Queries.GetCustomerDetails
 
         public async Task<GetCustomerDetailsViewmodel> Handle(GetCustomerDetailsQuery request, CancellationToken cancellationToken)
         {
-            var model = new GetCustomerDetailsViewmodel();
 
-            model.Customer = await _context.Customers.SingleOrDefaultAsync(c => c.CustomerId == request.CustomerId);
-            model.Accounts = await (from acc in _context.Accounts
-                                    join disp in _context.Dispositions on acc.AccountId equals disp.AccountId
-                                    where disp.CustomerId == request.CustomerId
-                                    select acc).ToListAsync();
+            //var q = await _context.Customers
+            //        .Include(x => x.Dispositions)
+            //        .ThenInclude(x => x.Cards)
+            //        .Include(c => c.Dispositions)
+            //        .ThenInclude(c => c.Account)
+            //        .ThenInclude(c => c.Loans)
+            //        .Include(c => c.Dispositions)
+            //        .ThenInclude(c => c.Account)
+            //        .ThenInclude(c => c.PermenentOrder)
+            //        .SingleOrDefaultAsync(c => c.CustomerId == request.CustomerId);
 
-            model.TotalBalance = model.Accounts.Sum(a => a.Balance);
+            var test = await _context.Customers.AsNoTracking().Select(x => new GetCustomerDetailsViewmodel
+            {
+                Customer = x,
+                Accounts = x.Dispositions.Select(c => c.Account).ToList(),
+                Cards = x.Dispositions.SelectMany(c => c.Cards).ToList(),
+                Loans = x.Dispositions.SelectMany(c => c.Account.Loans).ToList(),
+                PermantentOrders = x.Dispositions.SelectMany(c => c.Account.PermenentOrder).ToList()
 
-            return model;
+            }).Where(x => x.Customer.CustomerId == request.CustomerId).SingleAsync();
+
+            test.TotalBalance = test.Accounts.Sum(s => s.Balance);
+
+            //var model = new GetCustomerDetailsViewmodel();
+            //model.Customer = q;
+
+            //foreach (var item in q.Dispositions)
+            //{
+            //    model.Accounts.Add(item.Account);
+
+            //    foreach (var card in item.Cards)
+            //    {
+            //        model.Cards.Add(card);
+            //    }
+            //    foreach (var permenentOrder in item.Account.PermenentOrder)
+            //    {
+            //        model.PermantentOrders.Add(permenentOrder);
+            //    }
+            //    foreach (var loan in item.Account.Loans)
+            //    {
+            //        model.Loans.Add(loan);
+            //    }
+            //    model.TotalBalance += item.Account.Balance;
+            //}
+
+            //var model = new GetCustomerDetailsViewmodel();
+            //model.Customer = _context.Customers.SingleOrDefault(c => c.CustomerId == request.CustomerId);
+            //if (model.Customer != null)
+            //{
+            //    model.Accounts = model.Customer.Dispositions.Select(x => x.Account).ToList();
+            //    model.Cards = model.Customer.Dispositions.SelectMany(x => x.Cards).ToList();
+            //    model.PermantentOrders = model.Accounts.SelectMany(x => x.PermenentOrder).ToList();
+            //}
+
+            return test;
         }
     }
 }

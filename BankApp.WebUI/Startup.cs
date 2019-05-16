@@ -75,6 +75,51 @@ namespace BankApp.WebUI
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                      name: "customer_details",
+                      template: "customer/{customerId}",
+                      defaults: new
+                      {
+                          Controller = "Customer",
+                          Action = "Index"
+                      });
+
+                routes.MapRoute(
+                      name: "customer_transfer",
+                      template: "customer/{customerId}/transfer",
+                      defaults: new
+                      {
+                          Controller = "Customer",
+                          Action = "transfer"
+                      });
+
+                routes.MapRoute(
+                      name: "customer_deposit",
+                      template: "customer/{customerId}/deposit",
+                      defaults: new
+                      {
+                          Controller = "Customer",
+                          Action = "deposit"
+                      });
+
+                routes.MapRoute(
+                      name: "customer_withdraw",
+                      template: "customer/{customerId}/withdraw",
+                      defaults: new
+                      {
+                          Controller = "Customer",
+                          Action = "withdraw"
+                      });
+
+                routes.MapRoute(
+                      name: "account_details",
+                      template: "customer/{customerId}/account/{accountId}",
+                      defaults: new
+                      {
+                          Controller = "account",
+                          Action = "details"
+                      });
+
+                routes.MapRoute(
                       name: "search_index",
                       template: "Search",
                       defaults: new

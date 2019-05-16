@@ -1,0 +1,276 @@
+﻿@model BankApp.Application.Customers.Queries.GetCustomerDetails.GetCustomerDetailsViewmodel
+@using System.Globalization
+
+@*@{
+        ViewData["Title"] = "Customer information";
+    }*@
+
+<div class="row">
+    <div class="col s12">
+        <div class="row">
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12 center">
+                        <h4>@Model.Customer.Givenname @Model.Customer.Surname</h4>
+                    </div>
+                </div>
+                <div class="row center">
+                    <div class="col s4">
+                        <row>
+                            <div class="col s12 mb-1">
+                                <a asp-route="customer_deposit" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Deposit</a>
+                            </div>
+                        </row>
+                        <row>
+                            <div class="col s12 mb-1">
+                                <a asp-route="customer_transfer" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Transfer</a>
+                            </div>
+                        </row>
+                        <row>
+                            <div class="col s12">
+                                <a asp-route="customer_withdraw" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Withdraw</a>
+                            </div>
+                        </row>
+                    </div>
+                    <div class="col s4">
+                    </div>
+                    <div class="col s4">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <table class="striped responsive-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Birthdate</th>
+                            <th>Address</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @Model.Customer.CustomerId
+                            </td>
+                            <td>
+                                @Model.Customer.Givenname @Model.Customer.Surname (@Model.Customer.Gender)
+                            </td>
+                            <td>
+                                @Model.Customer.Birthday.Value.ToShortDateString()
+                            </td>
+                            <td>
+                                @($"{Model.Customer.Streetaddress}, {Model.Customer.Zipcode} {Model.Customer.City} - {Model.Customer.Country} ({Model.Customer.CountryCode})")
+                            </td>
+                            <td>
+                                (+@Model.Customer.Telephonecountrycode) @Model.Customer.Telephonenumber
+                            </td>
+                            <td>
+                                @Model.Customer.Emailaddress
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <h4>Accounts</h4>
+            </div>
+            <div class="col s12">
+                <h6>Total balance: @Model.TotalBalance.ToString("C", CultureInfo.CurrentCulture)</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <table class="striped responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Account Id</th>
+                            <th>Created</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var account in Model.Accounts)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-route="account_details" asp-route-accountId="@account.AccountId" asp-route-customerId="@Model.Customer.CustomerId">@account.AccountId</a>
+                                </td>
+                                <td>
+                                    @account.Created
+                                </td>
+                                <td>
+                                    @account.Balance.ToString("C", CultureInfo.CurrentCulture)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col s12">
+                <h4>Cards</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <table class="striped responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Card id</th>
+                            <th>Disposition id</th>
+                            <th>Card number</th>
+                            <th>CVC</th>
+                            <th>Expiration date</th>
+                            <th>Card type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var card in Model.Cards)
+                        {
+                            <tr>
+                                <td>
+                                    @card.CardId
+                                </td>
+                                <td>
+                                    @card.DispositionId
+                                </td>
+                                <td>
+                                    @card.Ccnumber
+                                </td>
+                                <td>
+                                    @card.Cctype
+                                </td>
+                                <td>
+                                    @card.ExpM-@card.ExpY
+                                </td>
+                                <td>
+                                    @card.Type
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col s12">
+                <h4>Loans</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <table class="striped responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Loan id</th>
+                            <th>Account id</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Duration</th>
+                            <th>Payments</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var loan in Model.Loans)
+                        {
+                            <tr>
+                                <td>
+                                    @loan.LoanId
+                                </td>
+                                <td>
+                                    @loan.AccountId
+                                </td>
+                                <td>
+                                    @loan.Date.ToShortDateString()
+                                </td>
+                                <td>
+                                    @loan.Amount.ToString("C", CultureInfo.CurrentCulture)
+                                </td>
+                                <td>
+                                    @loan.Duration
+                                </td>
+                                <td>
+                                    @loan.Payments
+                                </td>
+                                <td>
+                                    @loan.Status
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <h4>Permanent orders</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <table class="striped responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Order id</th>
+                            <th>Account id</th>
+                            <th>Bank to</th>
+                            <th>Account to</th>
+                            <th>Amount</th>
+                            <th>Symbol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var perm in Model.PermantentOrders)
+                        {
+                            <tr>
+                                <td>
+                                    @perm.OrderId
+                                </td>
+                                <td>
+                                    @perm.AccountId
+                                </td>
+                                <td>
+                                    @perm.BankTo
+                                </td>
+                                <td>
+                                    @perm.AccountTo
+                                </td>
+                                <td>
+                                    @perm.Amount.Value.ToString("C", CultureInfo.CurrentCulture)
+                                </td>
+                                <td>
+                                    @perm.Symbol
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>

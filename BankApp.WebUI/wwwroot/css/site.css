@@ -2,3 +2,20 @@
     font-family: "Poppins";
     font-weight: 600;
 }
+.btn{
+    width: 110px !important;
+}
+.mb-1{
+    margin-bottom: 3px !important;
+}
+.statusMessageWrapper {
+    height: 0px;
+    overflow-y: visible;
+    margin-bottom: 2rem;
+}
+.noMargin{
+    margin: 0px 0px 0px 0px !important;
+}
+.statusMessageDiv {
+    border-radius: 0px 0px 10px 10px !important;
+}

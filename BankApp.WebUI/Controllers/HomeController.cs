@@ -26,11 +26,5 @@ namespace BankApp.WebUI.Controllers
             var viewModel = await _mediator.Send(new GetIndexStatisticsQuery());
             return View(viewModel);
         }
-
-        public async Task<IActionResult> CreateUsers()
-        {
-            await _mediator.Send(new CreateCustomersCommand());
-            return RedirectToAction("index");
-        }
     }
 }

@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/css/helpers.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -24,26 +25,34 @@
         @*<partial name="_Navbar" />*@
         <nav>
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo">Logo</a>
+                <a href="#" class="brand-logo">Robbans bank</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                    <li><a asp-route="search_index">Search</a></li>
                 </ul>
             </div>
         </nav>
     </header>
     <div class="container">
-        @*<partial name="_StatusMessages" />*@
+        <partial name="_StatusMessages" />
+        <div class="row">
+            <div class="col s12">
+                <form method="get" asp-controller="search" asp-action="index">
+                    <input name="searchInput" class="form-control" placeholder="filter" />
+                    <button type="submit" class="btn btn-info">Search</button>
+                    <div asp-validation-summary="All">
+
+                    </div>
+                </form>
+            </div>
+        </div>
         <main role="main">
-            <div class="container">
-                
+
                 <div class="row">
                     <div class="col s12">
                         <h5 class="center page-title">@ViewData["Title"]</h5>
                         @RenderBody()
                     </div>
                 </div>
-            </div>
         </main>
     </div>
 

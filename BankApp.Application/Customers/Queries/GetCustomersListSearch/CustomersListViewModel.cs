@@ -1,4 +1,5 @@
-﻿using BankApp.Domain.Entities;
+﻿using BankApp.Application.DTO;
+using BankApp.Domain.Entities;
 using ReflectionIT.Mvc.Paging;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 {
     public class CustomersListViewModel
     {
-        public PagingList<GetCustomerListDTO> Customers { get; set; } 
+        public PagingList<CustomerDTO> Customers { get; set; } 
         public string SearchInput { get; set; }
     }
 }

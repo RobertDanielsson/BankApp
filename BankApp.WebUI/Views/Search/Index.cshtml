@@ -3,17 +3,7 @@
 @addTagHelper *, ReflectionIT.Mvc.Paging
 
 
-<div class="row">
-    <div class="col s12">
-        <form method="get" asp-controller="search" asp-action="index">
-            <input name="searchInput" class="form-control" placeholder="filter" />
-            <button type="submit" class="btn btn-info">Search</button>
-            <div asp-validation-summary="All">
 
-            </div>
-        </form>
-    </div>
-</div>
 <div class="row">
     <div class="col s12">
 
@@ -23,7 +13,7 @@
                     <th>Customer ID</th>
                     <th>Name</th>
                     <th>Birthdate</th>
-                    <td>Address</td>
+                    <th>Address</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,14 +22,18 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(item.CustomerId, "ViewCustomer", "Customer", new { customerId = item.CustomerId })
+                            @Html.ActionLink(item.CustomerId, "Index", "Customer", new { customerId = item.CustomerId })
 
                         </td>
                         <td>
-                            @Html.ActionLink(item.Name, "ViewCustomer", "Customer", new { customerId = item.CustomerId })
+                            @Html.ActionLink(item.Name, "Index", "Customer", new { customerId = item.CustomerId })
                         </td>
-                        <td>@item.Birthdate</td>
-                        <td>@($"{item.Streetaddress}, {item.Zipcode} {item.City} - {item.Country}")</td>
+                        <td>
+                        @item.Birthdate
+                        </td>
+                        <td>
+                        @($"{item.Streetaddress}, {item.Zipcode} {item.City} - {item.Country}")
+                        </td>
                     </tr>
                 }
             </tbody>

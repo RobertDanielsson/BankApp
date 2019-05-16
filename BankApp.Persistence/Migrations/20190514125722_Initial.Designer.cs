@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankApp.Persistence.Migrations
 {
     [DbContext(typeof(BankAppDbContext))]
-    [Migration("20190513190637_AddIdentity")]
-    partial class AddIdentity
+    [Migration("20190514125722_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,7 +74,9 @@ namespace BankApp.Persistence.Migrations
 
             modelBuilder.Entity("BankApp.Domain.Entities.Account", b =>
                 {
-                    b.Property<int>("AccountId");
+                    b.Property<int>("AccountId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(13, 2)");
@@ -94,7 +96,9 @@ namespace BankApp.Persistence.Migrations
 
             modelBuilder.Entity("BankApp.Domain.Entities.Card", b =>
                 {
-                    b.Property<int>("CardId");
+                    b.Property<int>("CardId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Ccnumber")
                         .IsRequired()
@@ -191,7 +195,9 @@ namespace BankApp.Persistence.Migrations
 
             modelBuilder.Entity("BankApp.Domain.Entities.Disposition", b =>
                 {
-                    b.Property<int>("DispositionId");
+                    b.Property<int>("DispositionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccountId");
 
@@ -213,7 +219,9 @@ namespace BankApp.Persistence.Migrations
 
             modelBuilder.Entity("BankApp.Domain.Entities.Loan", b =>
                 {
-                    b.Property<int>("LoanId");
+                    b.Property<int>("LoanId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccountId");
 
@@ -242,7 +250,9 @@ namespace BankApp.Persistence.Migrations
 
             modelBuilder.Entity("BankApp.Domain.Entities.PermenentOrder", b =>
                 {
-                    b.Property<int>("OrderId");
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccountId");
 
@@ -270,7 +280,9 @@ namespace BankApp.Persistence.Migrations
 
             modelBuilder.Entity("BankApp.Domain.Entities.Transaction", b =>
                 {
-                    b.Property<int>("TransactionId");
+                    b.Property<int>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Account")
                         .HasMaxLength(50);
@@ -293,8 +305,6 @@ namespace BankApp.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<int>("ReferenceId");
-
                     b.Property<string>("Symbol")
                         .HasMaxLength(50);
 
@@ -306,9 +316,6 @@ namespace BankApp.Persistence.Migrations
                         .HasName("PK_trans2");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("ReferenceId")
-                        .IsUnique();
 
                     b.ToTable("Transactions");
                 });

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
+namespace BankApp.Application.DTO
 {
-    public class GetCustomerListDTO
+    public class CustomerDTO
     {
         public string CustomerId { get; set; }
         public string Birthdate { get; set; }
