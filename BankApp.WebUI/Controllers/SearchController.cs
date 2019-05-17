@@ -21,10 +21,10 @@ namespace BankApp.WebUI.Controllers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Index(GetCustomersListQuery test)
+        public async Task<IActionResult> Index(GetCustomersListQuery query)
         {
 
-            if (int.TryParse(test.SearchInput, out int customerId))
+            if (int.TryParse(query.Search, out int customerId))
             {
                 return RedirectToAction("Index", "Customer", new { customerId = customerId });
             }
@@ -32,7 +32,7 @@ namespace BankApp.WebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var model = await _mediator.Send(new GetCustomersListQuery { SearchInput = test.SearchInput, Page = test.Page });
+                    var model = await _mediator.Send(new GetCustomersListQuery { Search = query.Search, Page = query.Page });
                     return View(model);
                 }
                 else

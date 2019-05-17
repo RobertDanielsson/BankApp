@@ -17,8 +17,4 @@
     <ProjectReference Include="..\BankApp.Domain\BankApp.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Transactions\Commands\" />
-  </ItemGroup>
-
 </Project>

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using BankApp.Application.Customers.Queries.GetIndexStatistics;
-using BankApp.Application.Customers.Commands.CreateCustomers;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace BankApp.Application.Customers.Queries.GetCustomerDetails
 {
@@ -32,18 +33,20 @@ namespace BankApp.Application.Customers.Queries.GetCustomerDetails
             //        .ThenInclude(c => c.Account)
             //        .ThenInclude(c => c.PermenentOrder)
             //        .SingleOrDefaultAsync(c => c.CustomerId == request.CustomerId);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            var test = await _context.Customers.AsNoTracking().Select(x => new GetCustomerDetailsViewmodel
+            var query = _context.Customers.Where(x => x.CustomerId == request.CustomerId).AsNoTracking().Select(x => new GetCustomerDetailsViewmodel
             {
                 Customer = x,
                 Accounts = x.Dispositions.Select(c => c.Account).ToList(),
                 Cards = x.Dispositions.SelectMany(c => c.Cards).ToList(),
                 Loans = x.Dispositions.SelectMany(c => c.Account.Loans).ToList(),
                 PermantentOrders = x.Dispositions.SelectMany(c => c.Account.PermenentOrder).ToList()
+            });
 
-            }).Where(x => x.Customer.CustomerId == request.CustomerId).SingleAsync();
-
-            test.TotalBalance = test.Accounts.Sum(s => s.Balance);
+            var model = await query.FirstOrDefaultAsync();
+            model.TotalBalance = model.Accounts.Sum(s => s.Balance);
 
             //var model = new GetCustomerDetailsViewmodel();
             //model.Customer = q;
@@ -68,15 +71,20 @@ namespace BankApp.Application.Customers.Queries.GetCustomerDetails
             //}
 
             //var model = new GetCustomerDetailsViewmodel();
-            //model.Customer = _context.Customers.SingleOrDefault(c => c.CustomerId == request.CustomerId);
+            //model.Customer = await _context.Customers
+            //    .Include(c => c.Dispositions)
+            //    .ThenInclude(c => c.Account)
+            //    .ThenInclude(c => c.PermenentOrder)
+            //    .SingleOrDefaultAsync(c => c.CustomerId == request.CustomerId);
             //if (model.Customer != null)
             //{
             //    model.Accounts = model.Customer.Dispositions.Select(x => x.Account).ToList();
             //    model.Cards = model.Customer.Dispositions.SelectMany(x => x.Cards).ToList();
             //    model.PermantentOrders = model.Accounts.SelectMany(x => x.PermenentOrder).ToList();
             //}
-
-            return test;
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds + "ms");
+            return model;
         }
     }
 }

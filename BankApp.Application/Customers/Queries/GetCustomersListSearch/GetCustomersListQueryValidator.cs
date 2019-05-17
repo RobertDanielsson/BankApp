@@ -9,7 +9,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
     {
         public GetCustomersListQueryValidator()
         {
-            RuleFor(x => x.SearchInput).NotEmpty().WithMessage("Please enter a first name or city.");
+            RuleFor(x => x.Search).NotEmpty().WithMessage("Please enter a first name or city.");
         }
     }
 }

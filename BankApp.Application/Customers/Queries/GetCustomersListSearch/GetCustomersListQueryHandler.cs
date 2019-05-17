@@ -28,7 +28,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var model = new CustomersListViewModel();
-            var result = _context.Customers.AsNoTracking().Where(c => c.Givenname.StartsWith(request.SearchInput) || c.City.StartsWith(request.SearchInput))
+            var result = _context.Customers.AsNoTracking().Where(c => c.Givenname.StartsWith(request.Search) || c.City.StartsWith(request.Search))
                 .Distinct()
                 .Select(s => new CustomerDTO
                 {
@@ -46,7 +46,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
             model.Customers = await PagingList.CreateAsync(result, 50, request.Page);
             model.Customers.RouteValue = new RouteValueDictionary
             {
-                {"searchInput", request.SearchInput }
+                {"searchInput", request.Search }
             };
             stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds + "ms");

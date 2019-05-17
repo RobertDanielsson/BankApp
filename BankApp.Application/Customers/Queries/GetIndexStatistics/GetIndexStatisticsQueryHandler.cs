@@ -36,12 +36,14 @@ namespace BankApp.Application.Customers.Queries.GetIndexStatistics
             //        NumberOfCustomers = c.Count()
             //    })
 
-            var model = await _context.Customers.AsNoTracking().DefaultIfEmpty().Select(t => new IndexStatisticsViewModel
+            var query = _context.Customers.AsNoTracking().DefaultIfEmpty().OrderBy(c => c.CustomerId).Select(t => new IndexStatisticsViewModel
             {
-                NumberOfCustomers = _context.Customers.OrderBy(c => c.CustomerId).Count(),
+                NumberOfCustomers = _context.Customers.Count(),
                 NumberOfAccounts = _context.Accounts.OrderBy(c => c.AccountId).Count(),
                 TotalBalance = _context.Accounts.OrderBy(c => c.AccountId).Sum(a => a.Balance)
-            }).FirstOrDefaultAsync();
+            });
+
+            var model = await query.FirstOrDefaultAsync();
 
             stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds + "ms");

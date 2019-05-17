@@ -18,17 +18,17 @@
                     <div class="col s4">
                         <row>
                             <div class="col s12 mb-1">
-                                <a asp-route="customer_deposit" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Deposit</a>
+                                <a asp-route="customer_deposit" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn btnWidth">Deposit</a>
                             </div>
                         </row>
                         <row>
                             <div class="col s12 mb-1">
-                                <a asp-route="customer_transfer" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Transfer</a>
+                                <a asp-route="customer_transfer" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn btnWidth">Transfer</a>
                             </div>
                         </row>
                         <row>
                             <div class="col s12">
-                                <a asp-route="customer_withdraw" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Withdraw</a>
+                                <a asp-route="customer_withdraw" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn btnWidth">Withdraw</a>
                             </div>
                         </row>
                     </div>
@@ -106,7 +106,7 @@
                                     <a asp-route="account_details" asp-route-accountId="@account.AccountId" asp-route-customerId="@Model.Customer.CustomerId">@account.AccountId</a>
                                 </td>
                                 <td>
-                                    @account.Created
+                                    @account.Created.ToShortDateString()
                                 </td>
                                 <td>
                                     @account.Balance.ToString("C", CultureInfo.CurrentCulture)

@@ -37,11 +37,8 @@
         <div class="row">
             <div class="col s12">
                 <form method="get" asp-controller="search" asp-action="index">
-                    <input name="searchInput" class="form-control" placeholder="filter" />
+                    <input name="search" class="form-control" placeholder="Search with customer id, name or city" />
                     <button type="submit" class="btn btn-info">Search</button>
-                    <div asp-validation-summary="All">
-
-                    </div>
                 </form>
             </div>
         </div>

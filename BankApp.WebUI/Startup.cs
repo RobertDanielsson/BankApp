@@ -88,7 +88,7 @@ namespace BankApp.WebUI
                       template: "customer/{customerId}/transfer",
                       defaults: new
                       {
-                          Controller = "Customer",
+                          Controller = "Account",
                           Action = "transfer"
                       });
 
@@ -97,7 +97,7 @@ namespace BankApp.WebUI
                       template: "customer/{customerId}/deposit",
                       defaults: new
                       {
-                          Controller = "Customer",
+                          Controller = "Account",
                           Action = "deposit"
                       });
 
@@ -106,7 +106,7 @@ namespace BankApp.WebUI
                       template: "customer/{customerId}/withdraw",
                       defaults: new
                       {
-                          Controller = "Customer",
+                          Controller = "Account",
                           Action = "withdraw"
                       });
 
@@ -117,6 +117,15 @@ namespace BankApp.WebUI
                       {
                           Controller = "account",
                           Action = "details"
+                      });
+
+                routes.MapRoute(
+                      name: "customer_create",
+                      template: "customer/createcustomer",
+                      defaults: new
+                      {
+                          Controller = "customer",
+                          Action = "createcustomer"
                       });
 
                 routes.MapRoute(
