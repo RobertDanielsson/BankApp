@@ -25,9 +25,10 @@ namespace BankApp.WebUI.Controllers
         }
 
         // GET: /<controller>/
-        public async Task<IActionResult> Details(int accountId)
+        public async Task<IActionResult> Details(int accountId, int customerId)
         {
             var model = await _mediator.Send(new GetAccountStatisticsQuery { AccountId = accountId });
+            model.CustomerId = customerId;
             return View(model);
         }
 

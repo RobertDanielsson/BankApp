@@ -11,6 +11,6 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
     public class CustomersListViewModel
     {
         public PagingList<CustomerDTO> Customers { get; set; } 
-        public string SearchInput { get; set; }
+        public string Search { get; set; }
     }
 }

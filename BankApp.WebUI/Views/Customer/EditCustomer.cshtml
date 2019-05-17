@@ -1,7 +1,7 @@
-﻿@model BankApp.Application.Customers.Commands.CreateCustomer.CreateCustomerCommand
+﻿@model BankApp.Domain.Entities.Customer
 
 <div class="row">
-    <form class="col s12" asp-route="customer_create" method="post">
+    <form class="col s12" asp-route="customer_edit" method="post">
         <div class="row">
             <div class="input-field col s12 m5">
                 <input asp-for="@Model.Givenname" type="text" class="validate">
@@ -81,7 +81,8 @@
         </div>
         <div class="row">
             <div class="col s12 center">
-                <button type="submit" class="waves-effect waves-light btn">Create customer</button>
+                <input type="hidden" value="@Model.CustomerId" name="CustomerId"/>
+                <button type="submit" class="waves-effect waves-light btn">Update customer</button>
             </div>
             <div asp-validation-summary="ModelOnly"></div>
         </div>

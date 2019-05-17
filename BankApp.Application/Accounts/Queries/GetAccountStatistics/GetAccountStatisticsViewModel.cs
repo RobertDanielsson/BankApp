@@ -9,5 +9,6 @@ namespace BankApp.Application.Accounts.Queries.GetAccountStatistics
     {
         public Account Account { get; set; }
         public List<Transaction> Transactions { get; set; }
+        public int CustomerId { get; set; }
     }
 }

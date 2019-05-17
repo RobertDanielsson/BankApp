@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
+using BankApp.Application.AutoMapper.Profiles;
 using BankApp.Application.Customers.Queries.GetCustomersListSearch;
 using BankApp.Application.Customers.Queries.GetIndexStatistics;
 using BankApp.Application.Identity;
@@ -59,6 +61,7 @@ namespace BankApp.WebUI
                 options.ViewName = "CustomPager";
             });
 
+            services.AddAutoMapper(typeof(CustomerProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -121,11 +124,20 @@ namespace BankApp.WebUI
 
                 routes.MapRoute(
                       name: "customer_create",
-                      template: "customer/createcustomer",
+                      template: "createcustomer",
                       defaults: new
                       {
                           Controller = "customer",
                           Action = "createcustomer"
+                      });
+
+                routes.MapRoute(
+                      name: "customer_edit",
+                      template: "customer/{customerId}/edit",
+                      defaults: new
+                      {
+                          Controller = "customer",
+                          Action = "editcustomer"
                       });
 
                 routes.MapRoute(

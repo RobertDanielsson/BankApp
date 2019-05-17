@@ -15,26 +15,21 @@
                     </div>
                 </div>
                 <div class="row center">
-                    <div class="col s4">
+                    <div class="col s12">
                         <row>
-                            <div class="col s12 mb-1">
+                            <div class="col s2">
                                 <a asp-route="customer_deposit" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn btnWidth">Deposit</a>
                             </div>
-                        </row>
-                        <row>
-                            <div class="col s12 mb-1">
-                                <a asp-route="customer_transfer" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn btnWidth">Transfer</a>
-                            </div>
-                        </row>
-                        <row>
-                            <div class="col s12">
+                            <div class="col s2">
                                 <a asp-route="customer_withdraw" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn btnWidth">Withdraw</a>
                             </div>
+                            <div class="col s2">
+                                <a asp-route="customer_transfer" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn btnWidth">Transfer</a>
+                            </div>
+                            <div class="col s2">
+                                <a asp-route="customer_edit" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Edit customer</a>
+                            </div>
                         </row>
-                    </div>
-                    <div class="col s4">
-                    </div>
-                    <div class="col s4">
                     </div>
                 </div>
             </div>
@@ -98,7 +93,6 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach (var account in Model.Accounts)
                         {
                             <tr>

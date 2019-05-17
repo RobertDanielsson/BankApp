@@ -39,9 +39,9 @@
             </tbody>
         </table>
 
-        <form asp-controller="Search" asp-action="index" asp-route-searchInput="@Model.SearchInput" method="get">
+        <form asp-controller="Search" asp-action="index" asp-route-search="@Model.Search" method="get">
             <vc:pager paging-list="@Model.Customers"></vc:pager>
-            <input type="hidden" name="searchInput" value="@Model.SearchInput" />
+            <input type="hidden" name="search" value="@Model.Search" />
         </form>
 
     </div>

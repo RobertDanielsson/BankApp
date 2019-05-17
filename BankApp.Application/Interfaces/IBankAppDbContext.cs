@@ -1,5 +1,6 @@
 ﻿using BankApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,5 +20,6 @@ namespace BankApp.Application.Interfaces
         DbSet<Transaction> Transactions { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        EntityEntry Update(object entity);
     }
 }

@@ -27,10 +27,6 @@ namespace BankApp.Application.Accounts.Commands.CreateDeposit
             {
                 return "Deposit failed, reciever account id not found";
             }
-            else if (request.Amount <= 0)
-            {
-                return "Deposit failed, amount has to be positive";
-            }
             else
             {
                 var transaction = new Transaction

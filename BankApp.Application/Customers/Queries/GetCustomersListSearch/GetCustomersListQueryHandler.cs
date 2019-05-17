@@ -30,6 +30,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
             var model = new CustomersListViewModel();
             var result = _context.Customers.AsNoTracking().Where(c => c.Givenname.StartsWith(request.Search) || c.City.StartsWith(request.Search))
                 .Distinct()
+                .OrderBy(c => c.CustomerId)
                 .Select(s => new CustomerDTO
                 {
                     CustomerId = s.CustomerId.ToString(),
@@ -39,14 +40,12 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
                     City = s.City,
                     Zipcode = s.Zipcode,
                     Country = s.Country
-
-                })
-                .OrderBy(c => c.CustomerId);
+                }).OrderBy(c => c.CustomerId);
 
             model.Customers = await PagingList.CreateAsync(result, 50, request.Page);
             model.Customers.RouteValue = new RouteValueDictionary
             {
-                {"searchInput", request.Search }
+                {"search", request.Search }
             };
             stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds + "ms");

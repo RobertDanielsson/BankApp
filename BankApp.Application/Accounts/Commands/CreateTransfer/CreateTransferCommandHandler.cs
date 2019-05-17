@@ -26,11 +26,7 @@ namespace BankApp.Application.Accounts.Commands.CreateTransfer
 
             if(recieverAccount == null)
             {
-                return "Transfer failed, reciever account id not found";
-            }
-            else if(request.Amount <= 0)
-            {
-                return "Transfer failed, amount has to be positive";
+                return "Transfer failed, account id not found";
             }
             else if(request.RecieverAccountId == request.SenderAccountId)
             {
