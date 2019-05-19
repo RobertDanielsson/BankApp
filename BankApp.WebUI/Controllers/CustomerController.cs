@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BankApp.Application.Accounts.Commands.CreateDeposit;
 using BankApp.Application.Accounts.Commands.CreateTransfer;
 using BankApp.Application.Accounts.Commands.CreateWithdraw;
@@ -22,10 +23,12 @@ namespace BankApp.WebUI.Controllers
     public class CustomerController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public CustomerController(IMediator mediator)
+        public CustomerController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         // GET: /<controller>/
@@ -81,7 +84,8 @@ namespace BankApp.WebUI.Controllers
                 }
             }
 
-            return View(await _mediator.Send(new GetCustomerQuery { CustomerId = query.CustomerId }));
+            var customer = new Customer();
+            return View(_mapper.Map(query, customer));
         }
     }
 }
