@@ -23,45 +23,29 @@
 <body>
     <header>
         <partial name="_Navbar" />
-        @*<nav>
-            <div class="nav-wrapper teal">
-                <a href="#" class="brand-logo ml20">SBS BANK</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a asp-route="customer_create">Create customer</a></li>
-                    <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                </ul>
-            </div>
-        </nav>*@
     </header>
-    <div class="container">
-        <partial name="_StatusMessages" />
-        <div class="row">
-            <div class="col m3"></div>
-            <div class="col s12 m6">
-                <div class="nav-wrapper">
-                    <form method="get" asp-controller="search" asp-action="index">
-                        <input type="search" name="search" class="form-control" placeholder="Search by customer id, first name or city" />
-                        <button type="submit" class="btn btn-info">Search</button>
-                    </form>
-                </div>
-            </div>
-            <div class="col m3"></div>
-        </div>
 
-        <main role="main">
+    <main role="main">
+        <div class="container">
+            <partial name="_StatusMessages" />
+            <partial name="_Searchbar" />
+
             <div class="row">
                 <div class="col s12">
-                    <h5 class="center page-title">@ViewData["Title"]</h5>
                     @RenderBody()
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
-    <footer class="border-top footer text-muted center">
-        <div class="container">
-            &copy; 2019 - BankApp Robert Danielsson
+    <footer class="page-footer teal">
+        <div class="footer-copyright">
+            <div class="container">
+                &copy; 2019 - SBS Bank Robert Danielsson
+            </div>
         </div>
     </footer>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

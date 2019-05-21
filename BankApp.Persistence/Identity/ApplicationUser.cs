@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BankApp.Application.Identity
+namespace BankApp.Persistence.Identity
 {
     public class ApplicationUser : IdentityUser
     {

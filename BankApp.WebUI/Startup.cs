@@ -8,9 +8,9 @@ using AutoMapper;
 using BankApp.Application.AutoMapper.Profiles;
 using BankApp.Application.Customers.Queries.GetCustomersListSearch;
 using BankApp.Application.Customers.Queries.GetIndexStatistics;
-using BankApp.Application.Identity;
 using BankApp.Application.Interfaces;
 using BankApp.Persistence;
+using BankApp.Persistence.Identity;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -60,11 +60,13 @@ namespace BankApp.WebUI
                     };
                 });
 
-            services.AddDbContext<IBankAppDbContext, BankAppDbContext>(options =>
+            services.AddDbContext<BankAppDbContext>(options =>
             {
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddScoped<IBankAppDbContext>(sp => sp.GetRequiredService<BankAppDbContext>());
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {

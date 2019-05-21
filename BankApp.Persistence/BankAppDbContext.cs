@@ -1,7 +1,7 @@
 ﻿using System;
-using BankApp.Application.Identity;
 using BankApp.Application.Interfaces;
 using BankApp.Domain.Entities;
+using BankApp.Persistence.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;

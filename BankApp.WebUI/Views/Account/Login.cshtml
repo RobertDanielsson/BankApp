@@ -1,14 +1,11 @@
 ﻿@model BankApp.WebUI.Models.LoginViewModel
-@{
 
-    ViewData["Title"] = "Sign in";
-}
 <div class="container">
     <div class="row">
         <div class="col l12 m12 s12">
-            <form method="post" asp-controller="Account" asp-action="Login" class="formLogin" autocomplete="off">
+            <form method="post" asp-controller="Account" asp-action="Login" autocomplete="off">
                 <div class="row">
-                    <div class="input-field">
+                    <div class="input-field col s12">
                         <i class="material-icons prefix">account_circle</i>
                         <label class="active" for="UserName">Username</label>
                         <input type="text" asp-for="@Model.Email" id="UserName" placeholder="">
@@ -16,21 +13,27 @@
                             <span asp-validation-for="Email"></span>
                         </div>
                     </div>
-                    <div class="input-field">
+                    <div class="input-field col s12">
                         <i class="material-icons prefix">vpn_key</i>
                         <label class="active" for="Password">Password</label>
                         <input type="password" asp-for="@Model.Password" id="Password" placeholder="">
-                        <div class="validation_text">
-                            @Html.ValidationSummary(true, "")
-                            <span asp-validation-for="Password"></span>
-                        </div>
-
+                        <span asp-validation-for="Password"></span>
                     </div>
-                    <div class="input-field center-align">
-                        <button type="submit" class="btn form-btn border-0" asp-controller="Account" asp-action="Login">Sign in</button>
+                    <div class="input-field col s12 center">
+                        <p>
+                            <label asp-for="RememberMe">
+                                <input type="checkbox" asp-for="RememberMe" />
+                                <span>Remember me?</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="input-field col s12 center">
+                        <button type="submit" class="waves-effect waves-light btn" asp-controller="Account" asp-action="Login">Sign in</button>
+                    </div>
+                    <div asp-validation-summary="ModelOnly" class="col s12">
+
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
