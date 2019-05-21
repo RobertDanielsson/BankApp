@@ -1,120 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using BankApp.Application.Accounts.Commands.CreateDeposit;
-using BankApp.Application.Accounts.Commands.CreateTransfer;
-using BankApp.Application.Accounts.Commands.CreateWithdraw;
-using BankApp.Application.Accounts.Queries.GetAccountStatistics;
-using BankApp.Application.Accounts.Queries.GetAccountTransactions;
-using BankApp.Application.Accounts.Queries.GetAccountTransferData;
-using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using BankApp.Application.Identity;
+using BankApp.WebUI.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BankApp.WebUI.Controllers
 {
+    [Authorize]
+    [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly IMediator _mediator;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(IMediator mediator)
+        public AccountController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
-            _mediator = mediator;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        // GET: /<controller>/
-        public async Task<IActionResult> Details(int accountId, int customerId)
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login()
         {
-            var model = await _mediator.Send(new GetAccountStatisticsQuery { AccountId = accountId });
-            model.CustomerId = customerId;
+            // Clear the existing external cookie to ensure a clean login process
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
+            }
+
             return View(model);
         }
 
-        public async Task<IActionResult> GetAdditionalTransactions(GetAccountTransactionsQuery query)
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register(string returnUrl = null)
         {
-            var result = await _mediator.Send(query);
-            Console.WriteLine(query.AccountId + " " + query.Page);
-            return Json(result);
-        }
-
-        public async Task<IActionResult> Transfer(int customerId)
-        {
-            return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = customerId }));
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Transfer(CreateTransferCommand query)
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var result = await _mediator.Send(query);
-
-                if (result == "Transfer successful")
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
                 {
-                    TempData["successMessage"] = "Transfer sent successfully";
-                    return RedirectToAction("Transfer", new { customerId = query.CustomerId });
-                }
-                else
-                {
-                    ModelState.AddModelError("", result);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("index", "Home");
                 }
             }
 
-            return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = query.CustomerId }));
-        }
-
-        public async Task<IActionResult> Deposit(int customerId)
-        {
-            return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = customerId }));
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Deposit(CreateDepositCommand query)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
         {
-            if (ModelState.IsValid)
-            {
-                var result = await _mediator.Send(query);
-
-                if (result == "Deposit successful")
-                {
-                    TempData["successMessage"] = "Deposit successful";
-                    return RedirectToAction("Withdraw", new { customerId = query.CustomerId });
-                }
-                else
-                {
-                    ModelState.AddModelError("", result);
-                }
-            }
-
-            return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = query.CustomerId }));
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        public async Task<IActionResult> Withdraw(int customerId)
+        [HttpGet]
+        public IActionResult AccessDenied()
         {
-            return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = customerId }));
+            return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Withdraw(CreateWithdrawCommand query)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _mediator.Send(query);
-
-                if (result == "Withdraw successful")
-                {
-                    TempData["successMessage"] = "Withdraw successful";
-                    return RedirectToAction("Withdraw", new { customerId = query.CustomerId });
-                }
-                else
-                {
-                    ModelState.AddModelError("", result);
-                }
-            }
-
-            return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = query.CustomerId }));
-        }
     }
 }

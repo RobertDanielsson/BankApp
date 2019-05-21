@@ -1,5 +1,18 @@
-﻿@model  BankApp.Application.Customers.Queries.GetIndexStatistics.IndexStatisticsViewModel
+﻿@model BankApp.Application.Customers.Queries.GetIndexStatistics.IndexStatisticsViewModel
+@using System.Globalization
 
-<h1>Customers: @Model.NumberOfCustomers</h1>
-<h1>Accounts: @Model.NumberOfAccounts</h1>
-<h1>Total balance: @Model.TotalBalance</h1>
+<div class="row">
+    <div class="col s12 center">
+        <div class="col s12">
+            <h3>Customers: @Model.NumberOfCustomers</h3>
+
+        </div>
+        <div class="col s12">
+            <h3>Accounts: @Model.NumberOfAccounts</h3>
+
+        </div>
+        <div class="col s12">
+            <h3>Total balance: @Model.TotalBalance.Value.ToString("C", CultureInfo.CurrentCulture)</h3>
+        </div>
+    </div>
+</div>

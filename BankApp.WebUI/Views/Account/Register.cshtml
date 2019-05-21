@@ -1,0 +1,83 @@
+﻿@model BankApp.WebUI.Models.RegisterViewModel
+
+    <div class="container">
+        <div class="row">
+            <div class="col l12 m12 s12">
+                <form method="post" asp-controller="Account" asp-action="Register" autocomplete="off">
+                    <div class="row">
+                        <div class="input-field">
+                            <i class="material-icons prefix">face</i>
+                            <label for="FirstName">Firstname</label>
+                            <input type="text" id="FirstName" asp-for="@Model.FirstName">
+                            <div class="validation_text">
+                                <span asp-validation-for="FirstName"></span>
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <i class="material-icons prefix">face</i>
+                            <label for="LastName">Lastname</label>
+                            <input type="text" asp-for="@Model.LastName" id="LastName">
+                            <div class="validation_text">
+                                <span asp-validation-for="LastName"></span>
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <i class="material-icons prefix">email</i>
+                            <label for="Email">Email</label>
+                            <input type="text" asp-for="@Model.Email" id="Email">
+                            <div class="validation_text">
+                                <span asp-validation-for="Email"></span>
+                            </div>
+                        </div>
+                        @*<div class="input-field">
+                            <i class="material-icons prefix">account_circle</i>
+                            <label class="active" for="UserName">Username</label>
+                            <input type="text" asp-for="@Model.UserName" id="UserName" placeholder="">
+                            <div class="validation_text">
+                                <span asp-validation-for="UserName"></span>
+                            </div>
+                        </div>*@
+                        <div class="input-field">
+                            <i class="material-icons prefix">vpn_key</i>
+                            <label class="active" for="Password">Password</label>
+                            <input type="password" asp-for="@Model.Password" id="Password" placeholder="">
+                            <div class="validation_text">
+                                <span asp-validation-for="Password"></span>
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <i class="material-icons prefix">list</i>
+                            <select asp-for="@Model.RoleId" asp-items="@Model.RoleList"></select>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col l6 m6 s12">
+                                <i class="material-icons prefix">date_range</i>
+                                <input type="text" class="datepicker" value="@(@DateTime.Now.ToShortDateString())"
+                                       asp-for="@Model.StartDate">
+
+                            </div>
+                            <div class="input-field col l6 m6 s12">
+                                <i class="material-icons prefix">date_range</i>
+                                <input type="text" class="datepicker" value="@(@DateTime.Now.ToShortDateString())"
+                                       asp-for="@Model.EndDate">
+                                <div class="validation_text">
+                                    @Html.ValidationSummary(true, "")
+                                    <span asp-validation-for="EndDate">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-field center-align">
+                            <button type="submit" class="btn form-btn border-0">Register</button>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

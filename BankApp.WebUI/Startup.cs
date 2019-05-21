@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Application.AutoMapper.Profiles;
@@ -12,13 +13,16 @@ using BankApp.Application.Interfaces;
 using BankApp.Persistence;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using ReflectionIT.Mvc.Paging;
 
 namespace BankApp.WebUI
@@ -36,6 +40,26 @@ namespace BankApp.WebUI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            string securityKey = Configuration["securityKey"];
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
+
+            services.AddScoped(typeof(IBankAppDbContext), typeof(BankAppDbContext));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        //What to validate
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        //Setup validate data
+                        ValidIssuer = "robband.se",
+                        ValidAudience = "readers",
+                        IssuerSigningKey = symmetricSecurityKey
+                    };
+                });
+
             services.AddDbContext<IBankAppDbContext, BankAppDbContext>(options =>
             {
                 options.UseSqlServer(
@@ -50,7 +74,22 @@ namespace BankApp.WebUI
                 options.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<BankAppDbContext>();
 
-            services.AddScoped(typeof(IBankAppDbContext), typeof(BankAppDbContext));
+            //services.AddDefaultIdentity<ApplicationUser>()
+            //    .AddEntityFrameworkStores<BankAppDbContext>();
+
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "Admin",
+                    policy => policy
+                    .RequireClaim("Admin"));
+
+                options.AddPolicy(
+                    "Cashier",
+                    policy => policy
+                    .RequireClaim("Cashier"));
+            });
 
             services.AddMvc()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetCustomersListQueryValidator>());
@@ -69,9 +108,10 @@ namespace BankApp.WebUI
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages();
             }
-
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
 
@@ -87,11 +127,20 @@ namespace BankApp.WebUI
                       });
 
                 routes.MapRoute(
+                      name: "customer_manageAccounts",
+                      template: "customer/{customerId}/manageaccounts",
+                      defaults: new
+                      {
+                          Controller = "Customer",
+                          Action = "manageaccounts"
+                      });
+
+                routes.MapRoute(
                       name: "customer_transfer",
                       template: "customer/{customerId}/transfer",
                       defaults: new
                       {
-                          Controller = "Account",
+                          Controller = "transfer",
                           Action = "transfer"
                       });
 
@@ -100,7 +149,7 @@ namespace BankApp.WebUI
                       template: "customer/{customerId}/deposit",
                       defaults: new
                       {
-                          Controller = "Account",
+                          Controller = "transfer",
                           Action = "deposit"
                       });
 
@@ -109,7 +158,7 @@ namespace BankApp.WebUI
                       template: "customer/{customerId}/withdraw",
                       defaults: new
                       {
-                          Controller = "Account",
+                          Controller = "transfer",
                           Action = "withdraw"
                       });
 
@@ -118,8 +167,8 @@ namespace BankApp.WebUI
                       template: "customer/{customerId}/account/{accountId}",
                       defaults: new
                       {
-                          Controller = "account",
-                          Action = "details"
+                          Controller = "customer",
+                          Action = "AccountDetails"
                       });
 
                 routes.MapRoute(

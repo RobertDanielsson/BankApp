@@ -6,6 +6,7 @@ using AutoMapper;
 using BankApp.Application.Accounts.Commands.CreateDeposit;
 using BankApp.Application.Accounts.Commands.CreateTransfer;
 using BankApp.Application.Accounts.Commands.CreateWithdraw;
+using BankApp.Application.Accounts.Queries.GetAccountStatistics;
 using BankApp.Application.Accounts.Queries.GetAccountTransferData;
 using BankApp.Application.Customers.Commands.CreateCustomer;
 using BankApp.Application.Customers.Commands.EditCustomer;
@@ -86,6 +87,18 @@ namespace BankApp.WebUI.Controllers
 
             var customer = new Customer();
             return View(_mapper.Map(query, customer));
+        }
+
+        public async Task<IActionResult> ManageAccounts(int customerId)
+        {
+            return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = customerId }));
+        }
+
+        public async Task<IActionResult> AccountDetails(int accountId, int customerId)
+        {
+            var model = await _mediator.Send(new GetAccountStatisticsQuery { AccountId = accountId });
+            model.CustomerId = customerId;
+            return View(model);
         }
     }
 }

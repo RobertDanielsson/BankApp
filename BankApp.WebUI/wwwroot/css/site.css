@@ -19,3 +19,7 @@
 .statusMessageDiv {
     border-radius: 0px 0px 10px 10px !important;
 }
+.statusMessageDiv p {
+    font-weight: 900;
+    color: white;
+}

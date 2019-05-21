@@ -1,0 +1,76 @@
+﻿@*@using Microsoft.AspNetCore.Identity
+@inject SignInManager<BankApp.Application.Identity.ApplicationUser> signInManager
+@inject UserManager<BankApp.Application.Identity.ApplicationUser> userManager
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+@if (signInManager.IsSignedIn(User))
+{
+    <nav>
+        <div class="nav-wrapper white">
+            <a class="brand-logo grey-text text-darken-3" asp-controller="Home" asp-action="Index">Nackademin Course Web</a>
+            <a class="grey-text text-darken-3 sidenav-trigger" href="#" data-target="mobile-demo"><i class="material-icons">menu</i></a>
+            <ul id="dropdown10" class="dropdown-content ">
+                @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
+                {
+                    <li>
+                        <a class="grey-text text-darken-3" asp-controller="Account" asp-action="Register">Register</a>
+                    </li>
+                    <li>
+                        <a class="grey-text text-darken-3" asp-controller="Account" asp-action="ManageUsers">Manage Users</a>
+                    </li>
+                }
+                @if ((await AuthorizationService.AuthorizeAsync(User, "Cashier")).Succeeded)
+                {
+                    <li><a asp-route="customer_create">Create customer</a></li>
+                    <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                }
+            </ul>
+
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li>
+                    <a class="grey-text text-darken-3" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+
+                @if (@signInManager.IsSignedIn(User))
+                {
+                    <li><a class="dropdown-trigger grey-text text-darken-3 " data-target="dropdown10">@User.Identity.Name<i class="material-icons right">arrow_drop_down</i></a></li>
+
+                    <li>
+                        <a class="grey-text text-darken-3" asp-area="" asp-controller="Account" asp-action="LogOff">Log Off</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+
+    <ul class="sidenav" id="mobile-demo">
+        <li>
+            <a class="grey-text text-darken-3" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+        @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
+        {
+            <li>
+                <a class="grey-text text-darken-3" asp-controller="Account" asp-action="Register">Register</a>
+            </li>
+            <li>
+                <a class="grey-text text-darken-3" asp-controller="Account" asp-action="ManageUsers">Manage Users</a>
+            </li>
+
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(User, "Cashier")).Succeeded)
+        {
+            <li><a asp-route="customer_create">Create customer</a></li>
+            <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+        }
+        @if (@signInManager.IsSignedIn(User))
+        {
+            <li class="nav-item">
+                <a class="grey-text text-darken-3">@User.Identity.Name</a>
+            </li>
+            <li>
+                <a class="grey-text text-darken-3" asp-area="" asp-controller="Account" asp-action="LogOff">Log Off</a>
+            </li>
+        }
+    </ul>
+}*@
