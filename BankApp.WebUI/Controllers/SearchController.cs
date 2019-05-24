@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BankApp.Application.Customers.Queries.GetCustomersListSearch;
+using BankApp.Application.Customers.Queries.GetCustomersListSearchNew;
 using BankApp.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReflectionIT.Mvc.Paging;
 
@@ -12,6 +14,7 @@ using ReflectionIT.Mvc.Paging;
 
 namespace BankApp.WebUI.Controllers
 {
+    [Authorize(Policy = "Cashier")]
     public class SearchController : Controller
     {
         private readonly IMediator _mediator;
@@ -21,10 +24,10 @@ namespace BankApp.WebUI.Controllers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Index(GetCustomersListQuery query)
+        public async Task<IActionResult> Index(GetCustomersListSearchNewQuery query)
         {
 
-            if (int.TryParse(query.Search, out int customerId))
+            if (int.TryParse(query.FirstName, out int customerId))
             {
                 return RedirectToAction("Index", "Customer", new { customerId = customerId });
             }
@@ -32,7 +35,7 @@ namespace BankApp.WebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var model = await _mediator.Send(new GetCustomersListQuery { Search = query.Search, Page = query.Page });
+                    var model = await _mediator.Send(query);
                     return View(model);
                 }
                 else

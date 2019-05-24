@@ -1,4 +1,5 @@
-﻿using BankApp.Application.Interfaces;
+﻿using BankApp.Application.Exceptions;
+using BankApp.Application.Interfaces;
 using BankApp.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BankApp.Application.Accounts.Commands.CreateWithdraw
 {
-    class CreateWithdrawCommandHandler : IRequestHandler<CreateWithdrawCommand, string>
+    public class CreateWithdrawCommandHandler : IRequestHandler<CreateWithdrawCommand, Unit>
     {
         private readonly IBankAppDbContext _context;
 
@@ -19,17 +20,21 @@ namespace BankApp.Application.Accounts.Commands.CreateWithdraw
             _context = context;
         }
 
-        public async Task<string> Handle(CreateWithdrawCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateWithdrawCommand request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts.SingleOrDefaultAsync(a => a.AccountId == request.RecieverAccountId);
+            var account = await _context.Accounts.SingleOrDefaultAsync(a => a.AccountId == request.AccountId);
 
-            if (account == null)
+            if (request.Amount <= 0)
             {
-                return "Withdraw failed, account id not found";
+                throw new NegativeAmountException();
+            }
+            else if (account == null)
+            {
+                throw new AccountNotFoundException(request.AccountId);
             }
             else if ((account.Balance - request.Amount) < 0)
             {
-                return "Withdraw failed, amount exceeded available balance";
+                throw new AmountExceedsBalanceException(request.AccountId);
             }
             else
             {
@@ -48,11 +53,11 @@ namespace BankApp.Application.Accounts.Commands.CreateWithdraw
 
                 if (await _context.SaveChangesAsync(cancellationToken) == 2)
                 {
-                    return "Withdraw successful";
+                    return Unit.Value;
                 }
                 else
                 {
-                    return "Database failure";
+                    throw new ErrorSavingToDatabaseException();
                 }
             }
         }

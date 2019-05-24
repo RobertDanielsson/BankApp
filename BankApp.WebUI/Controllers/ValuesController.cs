@@ -14,11 +14,11 @@ namespace BankApp.WebUI.Controllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    public class APIController : ControllerBase
+    public class ValuesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public APIController(IMediator mediator)
+        public ValuesController(IMediator mediator)
         {
             _mediator = mediator;
         }

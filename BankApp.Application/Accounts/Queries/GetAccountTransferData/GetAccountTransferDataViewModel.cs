@@ -11,6 +11,6 @@ namespace BankApp.Application.Accounts.Queries.GetAccountTransferData
     {
         public List<SelectListItem> Accounts { get; set; }
         public CustomerDTO Customer { get; set; }
-
+        public int AccountId { get; set; }
     }
 }

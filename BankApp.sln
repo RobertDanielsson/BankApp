@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankApp.Application", "Bank
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankApp.WebUI", "BankApp.WebUI\BankApp.WebUI.csproj", "{5022974C-EE69-47C2-A6AF-C88BDC5758D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankApp.Test", "BankApp.Test\BankApp.Test.csproj", "{F30743AD-FB5B-44DE-B61A-C75D72EAFC5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{5022974C-EE69-47C2-A6AF-C88BDC5758D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5022974C-EE69-47C2-A6AF-C88BDC5758D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5022974C-EE69-47C2-A6AF-C88BDC5758D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F30743AD-FB5B-44DE-B61A-C75D72EAFC5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F30743AD-FB5B-44DE-B61A-C75D72EAFC5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F30743AD-FB5B-44DE-B61A-C75D72EAFC5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F30743AD-FB5B-44DE-B61A-C75D72EAFC5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

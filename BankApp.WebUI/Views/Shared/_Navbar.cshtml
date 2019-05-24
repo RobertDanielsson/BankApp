@@ -12,10 +12,11 @@
         <div class="nav-wrapper teal">
             <a asp-action="index" asp-controller="home" class="brand-logo ml20">SBS Bank</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+
             <ul class="right hide-on-med-and-down">
                 @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
                 {
-                    <li><a class="" asp-controller="Account" asp-action="Register">Register</a></li>
+                    <li><a class="" asp-controller="Account" asp-action="Register">Register employee</a></li>
                     <li><a class="" asp-controller="Account" asp-action="ManageUsers">Manage Users</a></li>
                 }
                 @if ((await AuthorizationService.AuthorizeAsync(User, "Cashier")).Succeeded)
@@ -51,7 +52,7 @@
         {
             <li class="nav-item"><a class="">@User.Identity.Name</a></li>
             <li>
-                <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" style="margin-left:2.3rem;">
+                <form asp-controller="Account" asp-action="Logout" method="post" id="logoutFormMobile" style="margin-left:2.3rem;">
                     <button class="waves-effect waves-light btn" type="submit">Log out</button>
                 </form>
             </li>

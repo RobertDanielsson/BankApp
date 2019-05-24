@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BankApp.Application.Customers.Commands.CreateCustomer;
+using BankApp.Application.Exceptions;
 using BankApp.Application.Interfaces;
 using BankApp.Domain.Entities;
 using MediatR;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BankApp.Application.Customers.Commands.EditCustomer
 {
-    public class EditCustomerCommandHandler : IRequestHandler<EditCustomerCommand, string>
+    public class EditCustomerCommandHandler : IRequestHandler<EditCustomerCommand, Unit>
     {
         private readonly IBankAppDbContext _context;
         private readonly IMapper _mapper;
@@ -23,7 +24,7 @@ namespace BankApp.Application.Customers.Commands.EditCustomer
             _mapper = mapper;
         }
 
-        public async Task<string> Handle(EditCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(EditCustomerCommand request, CancellationToken cancellationToken)
         {
             var customer = new Customer();
             customer = _mapper.Map(request, customer);
@@ -31,11 +32,11 @@ namespace BankApp.Application.Customers.Commands.EditCustomer
 
             if (await _context.SaveChangesAsync(cancellationToken) == 1)
             {
-                return customer.CustomerId.ToString();
+                return Unit.Value;
             }
             else
             {
-                return "Database failure";
+                throw new ErrorSavingToDatabaseException();
             }
         }
     }

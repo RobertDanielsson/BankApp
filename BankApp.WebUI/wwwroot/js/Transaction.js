@@ -3,7 +3,7 @@
     //const accountId = window.location.href.split("/")[6];
 
     $("#getTransactions").on("click", () => {
-       $.getJSON("/account/getadditionaltransactions", {
+       $.getJSON("/transfer/getadditionaltransactions", {
            accountId: document.getElementById("accountId").value,
            page: page++
        })
@@ -19,8 +19,8 @@
                <td>${formatter.format(item.amount)}</td>
                <td>${formatter.format(item.balance)}</td>
                <td>${item.symbol}</td>
-               <td>${item.bank}</td>
-               <td>${item.account}</td>
+               <td>${item.bank == null ? ("") : (item.bank)}</td>
+               <td>${item.account == null ? ("") : (item.account)}</td>
                </tr>`)
            })
        })

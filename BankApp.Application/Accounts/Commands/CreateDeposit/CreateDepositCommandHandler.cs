@@ -1,4 +1,5 @@
-﻿using BankApp.Application.Interfaces;
+﻿using BankApp.Application.Exceptions;
+using BankApp.Application.Interfaces;
 using BankApp.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BankApp.Application.Accounts.Commands.CreateDeposit
 {
-    public class CreateDepositCommandHandler : IRequestHandler<CreateDepositCommand, string>
+    public class CreateDepositCommandHandler : IRequestHandler<CreateDepositCommand, Unit>
     {
         private readonly IBankAppDbContext _context;
 
@@ -19,31 +20,41 @@ namespace BankApp.Application.Accounts.Commands.CreateDeposit
             _context = context;
         }
 
-        public async Task<string> Handle(CreateDepositCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateDepositCommand request, CancellationToken cancellationToken)
         {
-            var recieverAccount = await _context.Accounts.SingleOrDefaultAsync(a => a.AccountId == request.RecieverAccountId);
+            var account = await _context.Accounts.SingleOrDefaultAsync(a => a.AccountId == request.AccountId);
 
-            if(recieverAccount == null)
+            if (request.Amount <= 0)
             {
-                return "Deposit failed, reciever account id not found";
+                throw new NegativeAmountException();
+            }
+            else if (account == null)
+            {
+                throw new AccountNotFoundException(request.AccountId);
             }
             else
             {
                 var transaction = new Transaction
                 {
-                    AccountId = recieverAccount.AccountId,
+                    AccountId = account.AccountId,
                     Date = DateTime.Now,
-                    Type = "Debit",
+                    Type = "Credit",
                     Operation = "Deposit in Cash",
                     Amount = request.Amount,
-                    Balance = recieverAccount.Balance + request.Amount
+                    Balance = account.Balance + request.Amount
                 };
 
                 _context.Transactions.Add(transaction);
+                account.Balance += request.Amount;
 
-                recieverAccount.Balance += request.Amount;
-                await _context.SaveChangesAsync(cancellationToken);
-                return "Deposit successful";
+                if (await _context.SaveChangesAsync(cancellationToken) == 2)
+                {
+                    return Unit.Value;
+                }
+                else
+                {
+                    throw new ErrorSavingToDatabaseException();
+                }
             }
         }
     }

@@ -7,7 +7,8 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 {
     public class GetCustomersListQuery : IRequest<CustomersListViewModel>
     {
-        public string Search { get; set; }
+        public string FirstName { get; set; }
+        public string City { get; set; }
         public int Page { get; set; } = 1;
     }
 }

@@ -44,6 +44,7 @@ namespace BankApp.WebUI
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
 
             services.AddScoped(typeof(IBankAppDbContext), typeof(BankAppDbContext));
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -76,10 +77,6 @@ namespace BankApp.WebUI
                 options.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<BankAppDbContext>();
 
-            //services.AddDefaultIdentity<ApplicationUser>()
-            //    .AddEntityFrameworkStores<BankAppDbContext>();
-
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(
@@ -110,10 +107,10 @@ namespace BankApp.WebUI
         {
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
-                app.UseStatusCodePages();
+                app.UseDeveloperExceptionPage();
+                //app.UseStatusCodePages();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
 
@@ -126,6 +123,24 @@ namespace BankApp.WebUI
                       {
                           Controller = "Customer",
                           Action = "Index"
+                      });
+
+                routes.MapRoute(
+                      name: "user_list",
+                      template: "users",
+                      defaults: new
+                      {
+                          Controller = "account",
+                          Action = "userlist"
+                      });
+
+                routes.MapRoute(
+                      name: "user_update",
+                      template: "users/{userId}",
+                      defaults: new
+                      {
+                          Controller = "account",
+                          Action = "updateuser"
                       });
 
                 routes.MapRoute(

@@ -1,40 +1,57 @@
 ﻿@model BankApp.WebUI.Models.LoginViewModel
 
-<div class="container">
-    <div class="row">
-        <div class="col l12 m12 s12">
-            <form method="post" asp-controller="Account" asp-action="Login" autocomplete="off">
-                <div class="row">
-                    <div class="input-field col s12">
-                        <i class="material-icons prefix">account_circle</i>
-                        <label class="active" for="UserName">Username</label>
-                        <input type="text" asp-for="@Model.Email" id="UserName" placeholder="">
-                        <div class="validation_text">
-                            <span asp-validation-for="Email"></span>
-                        </div>
-                    </div>
-                    <div class="input-field col s12">
-                        <i class="material-icons prefix">vpn_key</i>
-                        <label class="active" for="Password">Password</label>
-                        <input type="password" asp-for="@Model.Password" id="Password" placeholder="">
-                        <span asp-validation-for="Password"></span>
-                    </div>
-                    <div class="input-field col s12 center">
-                        <p>
-                            <label asp-for="RememberMe">
-                                <input type="checkbox" asp-for="RememberMe" />
-                                <span>Remember me?</span>
-                            </label>
-                        </p>
-                    </div>
-                    <div class="input-field col s12 center">
-                        <button type="submit" class="waves-effect waves-light btn" asp-controller="Account" asp-action="Login">Sign in</button>
-                    </div>
-                    <div asp-validation-summary="ModelOnly" class="col s12">
-
+<div class="row mb60">
+    <div class="col s12 center">
+        <h1>SBS Bank</h1>
+        <div class="row">
+            <div class="col m4"></div>
+            <div class="col m4"><hr /></div>
+            <div class="col m4"></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col m12 s12">
+        <form method="post" asp-controller="Account" asp-action="Login" autocomplete="off">
+            <div class="row">
+                <div class="col m3"></div>
+                <div class="input-field col s12 m6">
+                    <i class="material-icons prefix">account_circle</i>
+                    <label class="active" for="UserName">Username</label>
+                    <input required type="text" asp-for="@Model.Email" id="UserName">
+                    <div class="validation_text">
+                        <span asp-validation-for="Email"></span>
                     </div>
                 </div>
-            </form>
-        </div>
+                <div class="col m3"></div>
+            </div>
+            <div class="row">
+                <div class="col m3"></div>
+                <div class="input-field col s12 m6">
+                    <i class="material-icons prefix">vpn_key</i>
+                    <label class="active" for="Password">Password</label>
+                    <input required type="password" asp-for="@Model.Password" id="Password">
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div class="col m3"></div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 center">
+                    <p>
+                        <label asp-for="RememberMe">
+                            <input type="checkbox" asp-for="RememberMe" />
+                            <span>Remember me?</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 center">
+                    <input type="hidden" value="@ViewBag.ReturnUrl" name="returnUrl" />
+                    <button type="submit" class="waves-effect waves-light btn" asp-controller="Account" asp-action="Login">Sign in</button>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="col s12 center"></div>
+            </div>
+        </form>
     </div>
 </div>

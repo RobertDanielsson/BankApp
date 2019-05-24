@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BankApp.Application.Customers.Commands.EditCustomer
 {
-    public class EditCustomerCommand : IRequest<string>
+    public class EditCustomerCommand : IRequest
     {
         public int CustomerId { get; set; }
         public string Gender { get; set; }

@@ -1,0 +1,123 @@
+﻿@model BankApp.Application.Customers.Queries.GetCustomersListSearchNew.GetCustomersListSearchNewViewModel
+
+@{
+    //var start = this.Model.StartPageIndex;
+    //var stop = this.Model.StopPageIndex;
+
+    var firstPage = Model.FirstPage;
+    var lastPage = Model.LastPage;
+    var prevPage = Model.PrevPage;
+    var nextPage = Model.NextPage;
+    var totalPages = Model.TotalPages;
+    var currPage = Model.PrevPage + 1;
+}
+
+@if (this.Model.TotalPages > 1)
+{
+    <ul class="pagination">
+
+        @if (prevPage >= 1)
+        {
+            <li>
+                <a asp-route-page="1" asp-route="search_index" asp-route-firstname="@Model.FirstName" asp-route-city="@Model.City">
+                    1
+                </a>
+            </li>
+        }
+
+        @if (currPage > 1)
+        {
+            <li>
+                <a asp-route-page="@prevPage" asp-route="search_index" asp-route-firstname="@Model.FirstName" asp-route-city="@Model.City">
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="disabled">
+                <a>
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+        }
+
+        @if (nextPage < totalPages)
+        {
+            <li>
+                <a asp-route-page="@nextPage" asp-route="search_index" asp-route-firstname="@Model.FirstName" asp-route-city="@Model.City">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+        }
+
+        @for (int i = 0; i < Model.TotalPages; i++)
+        {
+
+        }
+    </ul>
+
+
+
+
+
+    @*@for (int i = start; i <= stop; i++)
+        {
+            <li class="@((Model.PageIndex == i) ? "active" : "waves-effect")">
+                @Html.ActionLink(i.ToString(), Model.Action, Model.GetRouteValueForPage(i))
+            </li>
+        }
+
+        @if (this.Model.PageIndex < this.Model.PageCount)
+        {
+            <li>
+                <a href="@Url.Action(Model.Action, Model.GetRouteValueForPage(this.Model.PageIndex + 1))">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="disabled">
+                <a>
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+        }
+
+        @if (stop < this.Model.PageCount)
+        {
+            <li>
+                <a href="@Url.Action(Model.Action, Model.GetRouteValueForPage(this.Model.PageCount))">
+                    @this.Model.PageCount
+                </a>
+            </li>
+        }*@
+
+}
+
+@*@if (start > 1)
+    {
+        <li>
+            <a href="@Url.Action(Model.Action, Model.GetRouteValueForPage(1))">
+                1
+            </a>
+        </li>
+    }
+
+    @if (this.Model.PageIndex > 1)
+    {
+        <li>
+            <a href="@Url.Action(Model.Action, Model.GetRouteValueForPage(this.Model.PageIndex - 1))">
+                <i class="material-icons">chevron_left</i>
+            </a>
+        </li>
+    }
+    else
+    {
+        <li class="disabled">
+            <a>
+                <i class="material-icons">chevron_left</i>
+            </a>
+        </li>
+    }*@

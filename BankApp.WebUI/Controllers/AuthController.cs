@@ -37,7 +37,8 @@ namespace BankApp.WebUI.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role, "Customer"),
-                new Claim("CustomerId", customerId)
+                new Claim("CustomerId", customerId),
+                new Claim("accountId", "5")
             };
 
             //Create token

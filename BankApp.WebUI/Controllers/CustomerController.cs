@@ -14,6 +14,7 @@ using BankApp.Application.Customers.Queries.GetCustomer;
 using BankApp.Application.Customers.Queries.GetCustomerDetails;
 using BankApp.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -21,6 +22,7 @@ using Newtonsoft.Json;
 
 namespace BankApp.WebUI.Controllers
 {
+    [Authorize(Policy = "Cashier")]
     public class CustomerController : Controller
     {
         private readonly IMediator _mediator;
@@ -65,28 +67,31 @@ namespace BankApp.WebUI.Controllers
 
         public async Task<IActionResult> EditCustomer(int customerId)
         {
-            return View(await _mediator.Send(new GetCustomerQuery { CustomerId = customerId }));
+            return View(await _mediator.Send(new GetCustomerForEditQuery { CustomerId = customerId }));
         }
 
         [HttpPost]
         public async Task<IActionResult> EditCustomer(EditCustomerCommand query)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var result = await _mediator.Send(query);
-
-                if (int.TryParse(result, out int customerId)) // Om Dbn uppdaterar kontot och returnerar kundens id
+                var customer = new Customer();
+                return View(_mapper.Map(query, customer));
+            }
+            else
+            {
+                try
                 {
-                    return RedirectToAction("index", new { customerId = customerId });
+                    await _mediator.Send(query);
+                    TempData["successMessage"] = "Customer updated";
+                    return RedirectToAction("index", new { customerId = query.CustomerId });
                 }
-                else
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("", result);
+                    ModelState.AddModelError("", ex.Message);
+                    return View(_mapper.Map(query, new Customer()));
                 }
             }
-
-            var customer = new Customer();
-            return View(_mapper.Map(query, customer));
         }
 
         public async Task<IActionResult> ManageAccounts(int customerId)

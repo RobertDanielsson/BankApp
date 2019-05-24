@@ -12,13 +12,17 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using BankApp.WebUI.Models;
 using BankApp.Persistence.Identity;
+using BankApp.Application.Interfaces;
+using BankApp.Persistence;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BankApp.WebUI.Controllers
 {
     [Authorize]
-    [Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -34,18 +38,18 @@ namespace BankApp.WebUI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login(string returnUrl)
         {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -55,7 +59,7 @@ namespace BankApp.WebUI.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToLocal(returnUrl);
                 }
                 else
                 {
@@ -68,20 +72,20 @@ namespace BankApp.WebUI.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Policy = "Admin")]
         public IActionResult Register()
         {
             return View(new RegisterViewModel());
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, PhoneNumber = model.PhoneNumber };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -104,11 +108,60 @@ namespace BankApp.WebUI.Controllers
             return RedirectToAction("login");
         }
 
-        [HttpGet]
-        public IActionResult AccessDenied()
+        public async Task<IActionResult> AccessDenied(string returnUrl)
         {
             return View();
         }
 
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> UserList([FromServices] BankAppDbContext context)
+        {
+            var model = await (from u in context.Users
+                               join ur in context.UserClaims on u.Id equals ur.UserId
+                               select new SelectListItem
+                               {
+                                   Value = u.Id,
+                                   Text = u.Email + "*" + ur.ClaimType
+                               }).ToListAsync();
+
+            return View(model);
+        }
+
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> UpdateUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var model = new UpdateUserViewModel
+            {
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                UserId = user.Id
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Policy = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(UpdateUserViewModel model)
+        {
+            if(model.Password != null)
+            {
+
+            }
+            return View(model);
+        }
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
     }
 }

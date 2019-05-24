@@ -1,4 +1,5 @@
-﻿using BankApp.Application.Interfaces;
+﻿using BankApp.Application.Exceptions;
+using BankApp.Application.Interfaces;
 using BankApp.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BankApp.Application.Accounts.Commands.CreateTransfer
 {
-    public class CreateTransferCommandHandler : IRequestHandler<CreateTransferCommand, string>
+    public class CreateTransferCommandHandler : IRequestHandler<CreateTransferCommand, Unit>
     {
         private readonly IBankAppDbContext _context;
 
@@ -19,22 +20,30 @@ namespace BankApp.Application.Accounts.Commands.CreateTransfer
             _context = context;
         }
 
-        public async Task<string> Handle(CreateTransferCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateTransferCommand request, CancellationToken cancellationToken)
         {
             var senderAccount = await _context.Accounts.SingleOrDefaultAsync(a => a.AccountId == request.SenderAccountId);
             var recieverAccount = await _context.Accounts.SingleOrDefaultAsync(a => a.AccountId == request.RecieverAccountId);
 
             if(recieverAccount == null)
             {
-                return "Transfer failed, account id not found";
+                throw new AccountNotFoundException(request.RecieverAccountId);
+            }
+            else if(request.Amount <= 0)
+            {
+                throw new NegativeAmountException();
+            }
+            else if(senderAccount == null)
+            {
+                throw new AccountNotFoundException(request.SenderAccountId);
             }
             else if(request.RecieverAccountId == request.SenderAccountId)
             {
-                return "Transfer failed, reciever and sender account id are the same";
+                throw new AccountNotFoundException(request.RecieverAccountId);
             }
             else if((senderAccount.Balance - request.Amount) < 0)
             {
-                return "Transfer failed, amount exceeds balance";
+                throw new AmountExceedsBalanceException(request.SenderAccountId);
             }
             else
             {
@@ -45,25 +54,36 @@ namespace BankApp.Application.Accounts.Commands.CreateTransfer
                     Type = "Debit",
                     Operation = "Transfer",
                     Amount = request.Amount * -1,
-                    Balance = senderAccount.Balance - request.Amount
+                    Balance = senderAccount.Balance - request.Amount,
+                    Bank = "SBS",
+                    Account = request.RecieverAccountId.ToString()
                 };
 
                 var transactionReciever = new Transaction
                 {
                     AccountId = recieverAccount.AccountId,
                     Date = DateTime.Now,
-                    Type = "Debit",
+                    Type = "Credit",
                     Operation = "Transfer",
                     Amount = request.Amount,
-                    Balance = recieverAccount.Balance + request.Amount
+                    Balance = recieverAccount.Balance + request.Amount,
+                    Bank = "SBS",
+                    Account = request.SenderAccountId.ToString()
                 };
 
                 _context.Transactions.AddRange(transactionSender, transactionReciever);
 
                 senderAccount.Balance -= request.Amount;
                 recieverAccount.Balance += request.Amount;
-                await _context.SaveChangesAsync(cancellationToken);
-                return "Transfer successful";
+
+                if(await _context.SaveChangesAsync(cancellationToken) == 4)
+                {
+                    return Unit.Value;
+                }
+                else
+                {
+                    throw new ErrorSavingToDatabaseException();
+                }
             }
         }
     }

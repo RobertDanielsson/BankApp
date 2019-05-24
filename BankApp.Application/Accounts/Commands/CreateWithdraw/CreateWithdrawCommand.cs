@@ -5,10 +5,10 @@ using System.Text;
 
 namespace BankApp.Application.Accounts.Commands.CreateWithdraw
 {
-    public class CreateWithdrawCommand : IRequest<string>
+    public class CreateWithdrawCommand : IRequest
     {
         public decimal Amount { get; set; }
         public int CustomerId { get; set; }
-        public int RecieverAccountId { get; set; }
+        public int AccountId { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BankApp.Application.Accounts.Commands.CreateTransfer
 {
-    public class CreateTransferCommand : IRequest<string>
+    public class CreateTransferCommand : IRequest
     {
         public decimal Amount { get; set; }
         public int CustomerId { get; set; }
