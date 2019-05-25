@@ -14,6 +14,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearchNew
         public int PrevPage { get; set; }
         public int NextPage { get; set; }
         public int TotalPages { get; set; }
+        public int CurrentPage { get; set; }
         public List<Customer> Customers { get; set; }
     }
 }

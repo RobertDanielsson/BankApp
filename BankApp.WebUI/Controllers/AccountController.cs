@@ -128,14 +128,15 @@ namespace BankApp.WebUI.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> UpdateUser(string userId)
+        public async Task<IActionResult> UpdateUser(string userId, string oldClaim)
         {
             var user = await _userManager.FindByIdAsync(userId);
             var model = new UpdateUserViewModel
             {
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                UserId = user.Id
+                UserId = user.Id,
+                OldClaim = oldClaim
             };
 
             return View(model);
@@ -143,13 +144,63 @@ namespace BankApp.WebUI.Controllers
 
         [Authorize(Policy = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(UpdateUserViewModel model)
+        public async Task<IActionResult> UpdateUser(UpdateUserViewModel model, [FromServices] BankAppDbContext context)
         {
-            if(model.Password != null)
+            if (!ModelState.IsValid)
             {
-
+                return View(model);
             }
-            return View(model);
+            else
+            {
+                var user = await context.Users.FindAsync(model.UserId);
+
+                var claimToRemove = new Claim(model.OldClaim, "");
+
+                if (model.Password != null)
+                {
+                    var result = await _userManager.RemovePasswordAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        await _userManager.AddPasswordAsync(user, model.Password);
+                    }
+                }
+                user.Email = model.Email;
+                user.UserName = model.Email;
+                user.PhoneNumber = model.PhoneNumber;
+                await _userManager.RemoveClaimAsync(user, claimToRemove);
+                await _userManager.AddClaimAsync(user, new Claim(model.RoleId, ""));
+                var updateResult = await _userManager.UpdateAsync(user);
+
+                if (updateResult.Succeeded)
+                {
+                    return RedirectToAction("userlist");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Failed to update employee");
+                    return View(model);
+                }
+            }
+        }
+
+        [Authorize(Policy = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Delete(string userId, [FromServices] BankAppDbContext context)
+        {
+            var user = await context.Users.FindAsync(userId);
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                TempData["successMessage"] = "Employee successfully deleted";
+                return RedirectToAction("UserList");
+            }
+            else
+            {
+                TempData["errorMessage"] = "Error deleting employee";
+                return RedirectToAction("UserList");
+            }
         }
 
         private ActionResult RedirectToLocal(string returnUrl)

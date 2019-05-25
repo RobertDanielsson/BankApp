@@ -72,7 +72,7 @@ namespace BankApp.WebUI
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 4;
+                options.Password.RequiredLength = 3;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<BankAppDbContext>();
@@ -94,10 +94,10 @@ namespace BankApp.WebUI
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetCustomersListQueryValidator>());
 
             services.AddMediatR(typeof(GetIndexStatisticsQueryHandler).GetTypeInfo().Assembly);
-            services.AddPaging(options =>
-            {
-                options.ViewName = "CustomPager";
-            });
+            //services.AddPaging(options =>
+            //{
+            //    options.ViewName = "CustomPager";
+            //});
 
             services.AddAutoMapper(typeof(CustomerProfile));
         }
@@ -123,6 +123,33 @@ namespace BankApp.WebUI
                       {
                           Controller = "Customer",
                           Action = "Index"
+                      });
+
+                routes.MapRoute(
+                      name: "user_delete",
+                      template: "users/delete/{userId}",
+                      defaults: new
+                      {
+                          Controller = "account",
+                          Action = "delete"
+                      });
+
+                routes.MapRoute(
+                      name: "login",
+                      template: "login",
+                      defaults: new
+                      {
+                          Controller = "account",
+                          Action = "login"
+                      });
+
+                routes.MapRoute(
+                      name: "user_register",
+                      template: "users/register",
+                      defaults: new
+                      {
+                          Controller = "Account",
+                          Action = "register"
                       });
 
                 routes.MapRoute(

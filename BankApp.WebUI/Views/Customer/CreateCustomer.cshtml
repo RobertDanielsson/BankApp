@@ -1,4 +1,7 @@
 ﻿@model BankApp.Application.Customers.Commands.CreateCustomer.CreateCustomerCommand
+@{
+    ViewData["Title"] = $"Create new customer";
+}
 
 <div class="row">
     <form class="col s12" asp-route="customer_create" method="post">

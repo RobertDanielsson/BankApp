@@ -1,11 +1,9 @@
 ﻿@model BankApp.WebUI.Models.RegisterViewModel
 
+@{ 
+    ViewData["Title"] = "Register employee";
+}
 
-<div class="row mb60">
-    <div class="col s12 center">
-        <h2>Register employee</h2>
-    </div>
-</div>
 <div class="row">
     <div class="col s12">
         <form method="post" asp-controller="Account" asp-action="Register" autocomplete="off">

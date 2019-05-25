@@ -9,19 +9,18 @@
        })
        .done((data) => {
            $.each(data, function (index, item) {
-               $("#myTable").append(`
-               <tr>
-               <td>${item.transactionId}</td>
-               <td>${item.accountId}</td>
-               <td>${item.date.substring(0, 10)}</td>
-               <td>${item.type}</td>
-               <td>${item.operation}</td>
-               <td>${formatter.format(item.amount)}</td>
-               <td>${formatter.format(item.balance)}</td>
-               <td>${item.symbol}</td>
-               <td>${item.bank == null ? ("") : (item.bank)}</td>
-               <td>${item.account == null ? ("") : (item.account)}</td>
-               </tr>`)
+               $('<tr>').append(
+                   $('<td>').text(item.transactionId),
+                   $('<td>').text(item.accountId),
+                   $('<td>').text(item.date.substring(0, 10)),
+                   $('<td>').text(item.type),
+                   $('<td>').text(item.operation),
+                   $('<td>').text(formatter.format(item.amount)),
+                   $('<td>').text(formatter.format(item.balance)),
+                   $('<td>').text(item.symbol),
+                   $('<td>').text(item.bank),
+                   $('<td>').text(item.account)
+               ).appendTo('#myTable');
            })
        })
     })

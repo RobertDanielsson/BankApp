@@ -1,5 +1,9 @@
 ﻿@model BankApp.WebUI.Models.UpdateUserViewModel
 
+@{
+    ViewData["Title"] = $"Edit employee [{Model.Email}]";
+}
+
 <div class="row">
     <div class="col s12">
         <form method="post" asp-controller="Account" asp-action="updateuser" autocomplete="off">
@@ -34,11 +38,24 @@
             <div class="row">
                 <div class="input-field col s6">
                     <i class="material-icons prefix">list</i>
-                    <select required asp-for="@Model.RoleId" asp-items="@Model.RoleList"></select>
+                    <select required asp-for="@Model.RoleId">
+                        @foreach (var item in Model.RoleList)
+                        {
+                            if (item.Value == Model.OldClaim)
+                            {
+                                <option value="@item.Value" selected>@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
                 </div>
                 <div class="col s6"></div>
                 <div class="input-field center col s12">
                     <input type="hidden" name="userid" value="@Model.UserId" />
+                    <input type="hidden" name="oldclaim" value="@Model.OldClaim">
                     <button type="submit" class="waves-effect waves-light btn">Update</button>
                 </div>
             </div>

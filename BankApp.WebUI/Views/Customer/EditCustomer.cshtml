@@ -1,5 +1,9 @@
 ﻿@model BankApp.Application.Customers.Commands.EditCustomer.EditCustomerCommand
 
+@{
+    ViewData["Title"] = $"Edit customer [{Model.Givenname} {Model.Surname}]";
+}
+
 <div class="row">
     <form class="col s12" asp-route="customer_edit" method="post">
         <div class="row">

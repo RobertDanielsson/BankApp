@@ -71,7 +71,7 @@ namespace BankApp.Test
                 await context.SaveChangesAsync();
 
                 var x = new CreateTransferCommandHandler(context);
-                await x.Handle(new CreateTransferCommand { Amount = 20, SenderAccountId = senderAccount.AccountId, RecieverAccountId = recieverAccount.AccountId}, new CancellationToken());
+                await x.Handle(new CreateTransferCommand { Amount = 20, SenderAccountId = senderAccount.AccountId, RecieverAccountId = recieverAccount.AccountId }, new CancellationToken());
             }
 
             //Assert that method throws AmountExceedsBalanceException
@@ -169,6 +169,15 @@ namespace BankApp.Test
             //Assert that method creates 4 transfers
             int expected = 4;
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public async Task Test_Interest_Applied()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<BankAppDbContext>()
+                .UseInMemoryDatabase(databaseName: "Test_Interest_Applied")
+                .Options;
         }
     }
 }

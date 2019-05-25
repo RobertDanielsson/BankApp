@@ -18,4 +18,8 @@
     <ProjectReference Include="..\BankApp.Domain\BankApp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Accounts\Commands\Create\" />
+  </ItemGroup>
+
 </Project>

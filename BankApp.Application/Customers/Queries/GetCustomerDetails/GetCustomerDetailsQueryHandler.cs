@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using BankApp.Domain.Entities;
 
 namespace BankApp.Application.Customers.Queries.GetCustomerDetails
 {
@@ -33,6 +34,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomerDetails
             //        .ThenInclude(c => c.Account)
             //        .ThenInclude(c => c.PermenentOrder)
             //        .SingleOrDefaultAsync(c => c.CustomerId == request.CustomerId);
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 

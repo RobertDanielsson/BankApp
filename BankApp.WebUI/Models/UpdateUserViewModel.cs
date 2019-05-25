@@ -21,6 +21,7 @@ namespace BankApp.WebUI.Models
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
         public string UserId { get; set; }
+        public string OldClaim { get; set; }
 
         public string RoleId { get; set; }
         public List<SelectListItem> RoleList { get; set; } = new List<SelectListItem>

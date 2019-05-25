@@ -1,4 +1,5 @@
 ﻿using BankApp.Application.Interfaces;
+using BankApp.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,8 +23,37 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearchNew
         public async Task<GetCustomersListSearchNewViewModel> Handle(GetCustomersListSearchNewQuery request, CancellationToken cancellationToken)
         {
             var skip = (request.Page - 1) * request.PageSize;
-            var pageOfResultsTask = _context.Customers.OrderBy(c => c.CustomerId).AsNoTracking().Where(c => c.Givenname.StartsWith(request.FirstName)).Skip(skip).Take(request.PageSize).ToListAsync();
-            var countTask = _context.Customers.OrderBy(c => c.CustomerId).AsNoTracking().Where(c => c.Givenname.StartsWith(request.FirstName)).CountAsync();
+            IOrderedQueryable<Customer> query;
+
+            if (request.City != null && request.FirstName != null)
+            {
+                query = _context.Customers
+                    .Where(c => c.City.Contains(request.City) && c.Givenname.Contains(request.FirstName))
+                    .Distinct()
+                    .OrderBy(c => c.Givenname)
+                    .ThenBy(c => c.Surname);
+            }
+            else if (request.FirstName == null)
+            {
+                query = _context.Customers
+                    .Where(c => c.City.Contains(request.City))
+                    .Distinct()
+                    .OrderBy(c => c.Givenname)
+                    .ThenBy(c => c.Surname);
+
+            }
+            else
+            {
+                query = _context.Customers
+                    .Where(c => c.Givenname.Contains(request.FirstName))
+                    .Distinct()
+                    .OrderBy(c => c.Givenname)
+                    .ThenBy(c => c.Surname);
+
+            }
+
+            var pageOfResultsTask = query.AsNoTracking().Skip(skip).Take(request.PageSize).ToListAsync();
+            var countTask = query.AsNoTracking().CountAsync();
 
             var results = await pageOfResultsTask;
             var count = await countTask;
@@ -42,7 +72,8 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearchNew
                 NextPage = nextPage,
                 Customers = results,
                 FirstName = request.FirstName,
-                City = request.City
+                City = request.City,
+                CurrentPage = request.Page
             };
 
             return model;

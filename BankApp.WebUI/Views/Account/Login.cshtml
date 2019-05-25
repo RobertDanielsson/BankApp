@@ -14,8 +14,7 @@
     <div class="col m12 s12">
         <form method="post" asp-controller="Account" asp-action="Login" autocomplete="off">
             <div class="row">
-                <div class="col m3"></div>
-                <div class="input-field col s12 m6">
+                <div class="input-field col s12 m6 offset-m3">
                     <i class="material-icons prefix">account_circle</i>
                     <label class="active" for="UserName">Username</label>
                     <input required type="text" asp-for="@Model.Email" id="UserName">
@@ -23,17 +22,14 @@
                         <span asp-validation-for="Email"></span>
                     </div>
                 </div>
-                <div class="col m3"></div>
             </div>
             <div class="row">
-                <div class="col m3"></div>
-                <div class="input-field col s12 m6">
+                <div class="input-field col s12 m6 offset-m3">
                     <i class="material-icons prefix">vpn_key</i>
                     <label class="active" for="Password">Password</label>
                     <input required type="password" asp-for="@Model.Password" id="Password">
                     <span asp-validation-for="Password"></span>
                 </div>
-                <div class="col m3"></div>
             </div>
             <div class="row">
                 <div class="input-field col s12 center">

@@ -22,7 +22,7 @@ namespace BankApp.Application.Accounts.APIQueries.GetTransactions
 
         public async Task<List<Transaction>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Transactions.Where(t => t.AccountId == request.AccountId).OrderByDescending(t => t.TransactionId).Skip(request.Offset).Take(request.Limit <= 20 ? request.Limit : 20).ToListAsync();
+            return await _context.Transactions.Where(t => t.AccountId == request.AccountId).OrderByDescending(t => t.TransactionId).Skip(request.Offset).Take(request.Limit).ToListAsync();
         }
     }
 }

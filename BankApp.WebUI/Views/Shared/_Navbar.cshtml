@@ -7,7 +7,6 @@
 
 @if (signInManager.IsSignedIn(User))
 {
-
     <nav>
         <div class="nav-wrapper teal">
             <a asp-action="index" asp-controller="home" class="brand-logo ml20">SBS Bank</a>
@@ -16,8 +15,8 @@
             <ul class="right hide-on-med-and-down">
                 @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
                 {
-                    <li><a class="" asp-controller="Account" asp-action="Register">Register employee</a></li>
-                    <li><a class="" asp-controller="Account" asp-action="ManageUsers">Manage Users</a></li>
+                    <li><a class="" asp-route="user_register">Register employee</a></li>
+                    <li><a class="" asp-route="user_list">Manage employees</a></li>
                 }
                 @if ((await AuthorizationService.AuthorizeAsync(User, "Cashier")).Succeeded)
                 {
@@ -40,8 +39,8 @@
     <ul class="sidenav" id="mobile-demo">
         @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
         {
-            <li><a class="" asp-controller="Account" asp-action="Register">Register</a></li>
-            <li><a class="" asp-controller="Account" asp-action="ManageUsers">Manage Users</a></li>
+            <li><a class="" asp-route="user_register">Register employee</a></li>
+            <li><a class="" asp-route="user_list">Manage employees</a></li>
         }
         @if ((await AuthorizationService.AuthorizeAsync(User, "Cashier")).Succeeded)
         {

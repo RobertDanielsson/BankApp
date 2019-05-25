@@ -22,7 +22,7 @@
                             <a asp-route="customer_details" asp-route-customerid="@item.CustomerId">@item.Givenname @item.Surname</a>
                         </td>
                         <td>
-                            @item.Birthday
+                            @item.Birthday.Value.ToShortDateString()
                         </td>
                         <td>
                             @($"{item.Streetaddress}, {item.Zipcode} {item.City} - {item.Country}")
