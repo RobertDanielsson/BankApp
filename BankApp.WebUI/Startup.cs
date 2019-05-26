@@ -137,8 +137,17 @@ namespace BankApp.WebUI
                       template: "login",
                       defaults: new
                       {
-                          Controller = "account",
+                          Controller = "Account",
                           Action = "login"
+                      });
+
+                routes.MapRoute(
+                      name: "access_denied",
+                      template: "accessdenied",
+                      defaults: new
+                      {
+                          Controller = "Account",
+                          Action = "AccessDenied"
                       });
 
                 routes.MapRoute(

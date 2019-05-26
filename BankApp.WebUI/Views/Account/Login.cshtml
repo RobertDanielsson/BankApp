@@ -1,53 +1,55 @@
 ﻿@model BankApp.WebUI.Models.LoginViewModel
 
-<div class="row mb60">
-    <div class="col s12 center">
-        <h1>SBS Bank</h1>
-        <div class="row">
-            <div class="col m4"></div>
-            <div class="col m4"><hr /></div>
-            <div class="col m4"></div>
-        </div>
-    </div>
+<link href="~/css/Login.css" rel="stylesheet" />
+
+<div class="fullscreen-bg">
+    <video loop muted autoplay poster="~/css/finalmosaic.jpg" class="fullscreen-bg__video">
+        <source src="https://giant.gfycat.com/GivingJadedAmericanwarmblood.webm" type="video/webm">
+    </video>
 </div>
-<div class="row">
-    <div class="col m12 s12">
-        <form method="post" asp-controller="Account" asp-action="Login" autocomplete="off">
-            <div class="row">
-                <div class="input-field col s12 m6 offset-m3">
-                    <i class="material-icons prefix">account_circle</i>
-                    <label class="active" for="UserName">Username</label>
-                    <input required type="text" asp-for="@Model.Email" id="UserName">
-                    <div class="validation_text">
-                        <span asp-validation-for="Email"></span>
+<div class="row mt100">
+    <div id="loginDiv" class="col s12 l12 xl6 offset-xl3">
+        <div class="col s12 center">
+            <h1>SBS Bank</h1>
+        </div>
+        <div class="col m12 s12">
+            <form method="post" asp-controller="Account" asp-action="Login" autocomplete="off">
+                <div class="row">
+                    <div class="input-field col s12 m8 offset-m2">
+                        <i class="material-icons prefix">account_circle</i>
+                        <label class="active" for="UserName">Email</label>
+                        <input required type="text" asp-for="@Model.Email" id="UserName">
+                        <div class="validation_text">
+                            <span asp-validation-for="Email"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12 m6 offset-m3">
-                    <i class="material-icons prefix">vpn_key</i>
-                    <label class="active" for="Password">Password</label>
-                    <input required type="password" asp-for="@Model.Password" id="Password">
-                    <span asp-validation-for="Password"></span>
+                <div class="row">
+                    <div class="input-field col s12 m8 offset-m2">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <label class="active" for="Password">Password</label>
+                        <input required type="password" asp-for="@Model.Password" id="Password">
+                        <span asp-validation-for="Password"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12 center">
-                    <p>
-                        <label asp-for="RememberMe">
-                            <input type="checkbox" asp-for="RememberMe" />
-                            <span>Remember me?</span>
-                        </label>
-                    </p>
+                <div class="row">
+                    <div class="input-field col s12 center noMargin">
+                        <p>
+                            <label asp-for="RememberMe">
+                                <input type="checkbox" asp-for="RememberMe" />
+                                <span>Remember me?</span>
+                            </label>
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12 center">
-                    <input type="hidden" value="@ViewBag.ReturnUrl" name="returnUrl" />
-                    <button type="submit" class="waves-effect waves-light btn" asp-controller="Account" asp-action="Login">Sign in</button>
+                <div class="row">
+                    <div class="input-field col s12 center noMargin">
+                        <input type="hidden" value="@ViewBag.ReturnUrl" name="returnUrl" />
+                        <button type="submit" class="waves-effect waves-light btn" asp-controller="Account" asp-action="Login">Sign in</button>
+                    </div>
+                    <div asp-validation-summary="ModelOnly" class="col s12 center"></div>
                 </div>
-                <div asp-validation-summary="ModelOnly" class="col s12 center"></div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>

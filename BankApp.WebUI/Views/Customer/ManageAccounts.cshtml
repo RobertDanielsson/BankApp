@@ -1,16 +1,15 @@
 ﻿@model BankApp.Application.Accounts.Queries.GetAccountTransferData.GetAccountTransferDataViewModel
 
+@{ 
+    ViewData["Title"] = $"Manage accounts [{Model.Customer.Name}]";
+}
+
 <div class="row">
     <div class="col s12">
         <div class="row">
-            <div class="row">
-                <div class="col s12 center">
-                    <h1>Manage accounts</h1>
-                    <h4>@Model.Customer.Name</h4>
-                </div>
-            </div>
+            
 
-            <div class="col s6">
+            <div class="col s12 m6">
 
                 <table class="striped responsive-table">
                     <thead>
@@ -38,12 +37,12 @@
 
                 </table>
             </div>
-            <div class="col s6">
+            <div class="col s12 m6">
 
             </div>
         </div>
         <div class="row">
-            <div class="col s12">
+            <div class="col s12 center">
                 <a asp-route="customer_details" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Go back</a>
             </div>
         </div>

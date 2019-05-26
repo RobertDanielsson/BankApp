@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using BankApp.Application.Customers.Queries.GetIndexStatistics;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,6 +21,7 @@ namespace BankApp.WebUI.Controllers
         }
 
         // GET: /<controller>/
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var viewModel = await _mediator.Send(new GetIndexStatisticsQuery());

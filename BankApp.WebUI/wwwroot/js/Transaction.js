@@ -25,9 +25,9 @@
        })
     })
 
-    const formatter = new Intl.NumberFormat('sv-SE', {
+    const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'SEK',
+        currency: 'USD',
         minimumFractionDigits: 2
     })
 })
