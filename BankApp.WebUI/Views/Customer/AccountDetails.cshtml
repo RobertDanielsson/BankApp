@@ -14,7 +14,10 @@
 
         <div class="row">
             <div class="col s12">
-                <a asp-route="customer_details" asp-route-customerId="@Model.CustomerId" class="waves-effect waves-light btn">Go back</a>
+                <form asp-action="addinterest" asp-controller="transfer" method="post" asp-route-accountId="@Model.Account.AccountId" asp-route-customerid="@Model.CustomerId">
+                    <a asp-route="customer_details" asp-route-customerId="@Model.CustomerId" class="waves-effect waves-light btn">Go back</a>
+                    <button class="waves-effect waves-light btn">Apply interest</button>
+                </form>
             </div>
         </div>
         <div class="divider"></div>

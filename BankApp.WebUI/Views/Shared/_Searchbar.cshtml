@@ -5,8 +5,7 @@
 @if ((await AuthorizationService.AuthorizeAsync(User, "Cashier")).Succeeded)
 {
     <div class="row">
-        <div class="col m3"></div>
-        <div class="col s12 m6">
+        <div class="col s12 m6 offset-m3 ">
             <form method="get" asp-controller="search" asp-action="index" class="mt10">
                 <div class="row">
                     <div class="col s6 m5">
@@ -21,6 +20,5 @@
                 </div>
             </form>
         </div>
-        <div class="col m3"></div>
     </div>
 }

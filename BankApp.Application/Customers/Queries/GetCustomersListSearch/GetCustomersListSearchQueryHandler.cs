@@ -9,18 +9,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BankApp.Application.Customers.Queries.GetCustomersListSearchNew
+namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 {
-    public class GetCustomersListSearchNewQueryHandler : IRequestHandler<GetCustomersListSearchNewQuery, GetCustomersListSearchNewViewModel>
+    public class GetCustomersListSearchQueryHandler : IRequestHandler<GetCustomersListSearchQuery, GetCustomersListSearchViewModel>
     {
         private readonly IBankAppDbContext _context;
 
-        public GetCustomersListSearchNewQueryHandler(IBankAppDbContext context)
+        public GetCustomersListSearchQueryHandler(IBankAppDbContext context)
         {
             _context = context;
         }
 
-        public async Task<GetCustomersListSearchNewViewModel> Handle(GetCustomersListSearchNewQuery request, CancellationToken cancellationToken)
+        public async Task<GetCustomersListSearchViewModel> Handle(GetCustomersListSearchQuery request, CancellationToken cancellationToken)
         {
             var skip = (request.Page - 1) * request.PageSize;
             IOrderedQueryable<Customer> query;
@@ -63,7 +63,7 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearchNew
             var prevPage = Math.Max(request.Page - 1, firstPage);
             var nextPage = Math.Min(request.Page + 1, lastPage);
 
-            var model = new GetCustomersListSearchNewViewModel
+            var model = new GetCustomersListSearchViewModel
             {
                 TotalPages = totalPages,
                 FirstPage = firstPage,

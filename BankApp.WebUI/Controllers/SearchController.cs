@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BankApp.Application.Customers.Queries.GetCustomersListSearch;
-using BankApp.Application.Customers.Queries.GetCustomersListSearchNew;
 using BankApp.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +23,7 @@ namespace BankApp.WebUI.Controllers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Index(GetCustomersListSearchNewQuery query)
+        public async Task<IActionResult> Index(GetCustomersListSearchQuery query)
         {
 
             if (int.TryParse(query.FirstName, out int customerId))
@@ -33,15 +32,8 @@ namespace BankApp.WebUI.Controllers
             }
             else
             {
-                if (ModelState.IsValid)
-                {
-                    var model = await _mediator.Send(query);
-                    return View(model);
-                }
-                else
-                {
-                    return NoContent();
-                }
+                var model = await _mediator.Send(query);
+                return View(model);
             }
         }
     }

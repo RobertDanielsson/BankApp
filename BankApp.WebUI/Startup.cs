@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Application.AutoMapper.Profiles;
+using BankApp.Application.Customers.Commands.CreateCustomer;
 using BankApp.Application.Customers.Queries.GetCustomersListSearch;
 using BankApp.Application.Customers.Queries.GetIndexStatistics;
 using BankApp.Application.Interfaces;
+using BankApp.Infrastructure;
 using BankApp.Persistence;
 using BankApp.Persistence.Identity;
 using FluentValidation.AspNetCore;
@@ -40,10 +42,12 @@ namespace BankApp.WebUI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped(typeof(IBankAppDbContext), typeof(BankAppDbContext));
+            services.AddScoped<IBankAppDbContext>(sp => sp.GetRequiredService<BankAppDbContext>());
+            services.AddScoped<IDateTime, SystemClock>();
+
             string securityKey = Configuration["securityKey"];
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
-
-            services.AddScoped(typeof(IBankAppDbContext), typeof(BankAppDbContext));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -67,7 +71,6 @@ namespace BankApp.WebUI
                     Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddScoped<IBankAppDbContext>(sp => sp.GetRequiredService<BankAppDbContext>());
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -91,18 +94,13 @@ namespace BankApp.WebUI
             });
 
             services.AddMvc()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetCustomersListQueryValidator>());
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateCustomerCommandValidator>());
 
             services.AddMediatR(typeof(GetIndexStatisticsQueryHandler).GetTypeInfo().Assembly);
-            //services.AddPaging(options =>
-            //{
-            //    options.ViewName = "CustomPager";
-            //});
 
             services.AddAutoMapper(typeof(CustomerProfile));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

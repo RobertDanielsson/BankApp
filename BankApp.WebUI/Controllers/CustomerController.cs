@@ -45,20 +45,21 @@ namespace BankApp.WebUI.Controllers
             return View(new CreateCustomerCommand());
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> CreateCustomer(CreateCustomerCommand customer)
         {
             if (ModelState.IsValid)
             {
-                var result = await _mediator.Send(customer);
-
-                if (int.TryParse(result, out int customerId)) // Om Dbn sparar nya kontot och returnerar kundens id
+                try
                 {
-                    return RedirectToAction("index", new { customerId = customerId });
+                    var result = await _mediator.Send(customer);
+                    return RedirectToAction("index", new { customerId = int.Parse(result) });
                 }
-                else
+                catch(Exception ex)
                 {
-                    ModelState.AddModelError("", result);
+                    ModelState.AddModelError("", ex.Message);
+                    return View(customer);
                 }
             }
 
@@ -70,6 +71,7 @@ namespace BankApp.WebUI.Controllers
             return View(await _mediator.Send(new GetCustomerForEditQuery { CustomerId = customerId }));
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> EditCustomer(EditCustomerCommand query)
         {

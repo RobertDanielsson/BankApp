@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BankApp.Application.Customers.Queries.GetCustomersListSearchNew
+namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 {
-    public class GetCustomersListSearchNewViewModel
+    public class GetCustomersListSearchViewModel
     {
         public string FirstName { get; set; }
         public string City { get; set; }

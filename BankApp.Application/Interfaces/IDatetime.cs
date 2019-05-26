@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BankApp.Application.Interfaces
 {
-    public interface IDatetime
+    public interface IDateTime
     {
         DateTime GetCurrentTime();
     }

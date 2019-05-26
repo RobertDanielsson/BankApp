@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 {
-    public class GetCustomersListQuery : IRequest<CustomersListViewModel>
+    public class GetCustomersListQuery : IRequest<GetCustomersListSearchViewModel>
     {
         public string FirstName { get; set; }
         public string City { get; set; }

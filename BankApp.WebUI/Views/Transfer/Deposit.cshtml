@@ -1,33 +1,30 @@
 ﻿@model BankApp.Application.Accounts.Queries.GetAccountTransferData.GetAccountTransferDataViewModel
 
+@{ 
+    ViewData["Title"] = $"Deposit [{Model.Customer.Name}]";
+}
+
 <div class="row">
     <div class="col s12">
-        <div class="row">
-            <div class="col s12 center">
-                <h1>Deposit</h1>
-                <h4>@Model.Customer.Name</h4>
-            </div>
-        </div>
-
-        <form asp-route="customer_deposit" method="post">
+        <form onsubmit="return validateMyForm();" asp-route="customer_deposit" method="post">
             <div class="row">
-                <div class="col m3"></div>
-
-                <div class="z-depth-1 col s12 m6 pb10">
+                <div class="z-depth-1 col s12 m6 pb10 offset-m3">
                     <h6>Select an account and amount</h6>
                     <select name="AccountId" asp-items="Model.Accounts"></select>
-                    <input name="Amount" placeholder="Amount" />
+                    <input id="amount" name="Amount" placeholder="Amount" />
                     <input type="hidden" value="@Model.Customer.CustomerId" />
                     <button class="waves-effect waves-light btn" type="submit">Deposit</button>
                 </div>
-                <div class="col m3"></div>
-
             </div>
         </form>
         <div class="row">
-            <div class="col m3"></div>
-            <div asp-validation-summary="All" class="col m5"></div>
-            <div class="col m4"></div>
+            <div asp-validation-summary="All" class="col m5 offset-m3">
+                <div>
+                    <ul>
+                        <li id="valLi"></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col s12 center">
@@ -36,3 +33,5 @@
         </div>
     </div>
 </div>
+
+<script defer src="~/js/NegativeCheckOnSubmit.js"></script>

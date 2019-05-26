@@ -92,8 +92,12 @@ namespace BankApp.WebUI.Controllers
                     var claim = new Claim(model.RoleId, "");
                     await _userManager.AddClaimAsync(user, claim);
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "Home");
+                    TempData["successMessage"] = "Employee successfully created";
+                    return RedirectToAction("userlist");
+                }
+                else
+                {
+                    TempData["errorMessage"] = "Error creating employee";
                 }
             }
 
@@ -108,7 +112,7 @@ namespace BankApp.WebUI.Controllers
             return RedirectToAction("login");
         }
 
-        public async Task<IActionResult> AccessDenied(string returnUrl)
+        public IActionResult AccessDenied()
         {
             return View();
         }
@@ -144,6 +148,7 @@ namespace BankApp.WebUI.Controllers
 
         [Authorize(Policy = "Admin")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateUser(UpdateUserViewModel model, [FromServices] BankAppDbContext context)
         {
             if (!ModelState.IsValid)
@@ -185,6 +190,7 @@ namespace BankApp.WebUI.Controllers
         }
 
         [Authorize(Policy = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Delete(string userId, [FromServices] BankAppDbContext context)
         {

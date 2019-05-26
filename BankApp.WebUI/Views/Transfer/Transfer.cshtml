@@ -1,43 +1,44 @@
 ﻿@model BankApp.Application.Accounts.Queries.GetAccountTransferData.GetAccountTransferDataViewModel
 
+@{
+    ViewData["Title"] = $"Transfer [{Model.Customer.Name}]";
+}
+
 <div class="row">
     <div class="col s12">
-        <div class="row">
-            <div class="col s12 center">
-                <h1>Transfer</h1>
-                <h4>@Model.Customer.Name</h4>
-            </div>
-        </div>
-
-        <form asp-route="customer_transfer" method="post">
+        <form onsubmit="return validateMyForm();" asp-route="customer_transfer" method="post">
             <div class="row">
                 <div class="col s12">
                     <div class="z-depth-1 col m5 s12">
                         <h6>Select an account and amount</h6>
                         <select name="SenderAccountId" asp-items="Model.Accounts"></select>
-                        <input name="Amount" placeholder="Amount"/>
+                        <input id="amount" name="Amount" placeholder="Amount" />
                         <input type="hidden" value="@Model.Customer.CustomerId" />
                     </div>
-                    <div class="col m2">
 
-                    </div>
-                    <div class="z-depth-1 col m5 s12" style="padding-bottom:18px;">
+                    <div class="z-depth-1 col m5 s12 offset-m2" style="padding-bottom:18px;">
                         <h6>Reciever account id</h6>
-                        <input type="text" name="RecieverAccountId" placeholder="Reciever account id"/>
+                        <input type="text" name="RecieverAccountId" placeholder="Reciever account id" />
                         <button class="waves-effect waves-light btn" type="submit">Transfer</button>
                     </div>
                 </div>
             </div>
         </form>
         <div class="row">
-            <div class="col m3"></div>
-            <div asp-validation-summary="All" class="col m5"></div>
-            <div class="col m4"></div>
+            <div asp-validation-summary="All" class="col m5 ">
+                <div>
+                    <ul>
+                        <li id="valLi"></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="row">
-            <div class="col s12">
+            <div class="col s12 center">
                 <a asp-route="customer_details" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Go back</a>
             </div>
         </div>
     </div>
 </div>
+
+<script defer src="~/js/NegativeCheckOnSubmit.js"></script>

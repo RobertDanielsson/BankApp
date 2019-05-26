@@ -1,4 +1,5 @@
-﻿using BankApp.Application.Interfaces;
+﻿using BankApp.Application.Exceptions;
+using BankApp.Application.Interfaces;
 using BankApp.Domain.Entities;
 using MediatR;
 using System;
@@ -61,7 +62,7 @@ namespace BankApp.Application.Customers.Commands.CreateCustomer
             }
             else
             {
-                return "Database failure";
+                throw new ErrorSavingToDatabaseException();
             }
         }
     }

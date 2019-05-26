@@ -1,12 +1,16 @@
 using BankApp.Application.Accounts.Commands.CreateDeposit;
+using BankApp.Application.Accounts.Commands.CreateInterest;
 using BankApp.Application.Accounts.Commands.CreateTransfer;
 using BankApp.Application.Accounts.Commands.CreateWithdraw;
 using BankApp.Application.Exceptions;
 using BankApp.Application.Interfaces;
 using BankApp.Domain.Entities;
+using BankApp.Infrastructure;
 using BankApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -172,12 +176,89 @@ namespace BankApp.Test
         }
 
         [TestMethod]
-        public async Task Test_Interest_Applied()
+        public async Task Test_Interest_No_Prior_Applied()
         {
             //Arrange
             var options = new DbContextOptionsBuilder<BankAppDbContext>()
-                .UseInMemoryDatabase(databaseName: "Test_Interest_Applied")
+                .UseInMemoryDatabase(databaseName: "Test_Interest_No_Prior_Applied")
                 .Options;
+            var systemClockCreateAccount = Substitute.For<IDateTime>();
+            systemClockCreateAccount.GetCurrentTime().Returns(new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Local));
+            var systemClockCheckInterest = Substitute.For<IDateTime>();
+            systemClockCheckInterest.GetCurrentTime().Returns(new DateTime(2010, 2, 1, 0, 0, 0, DateTimeKind.Local));
+
+            decimal actual = 0;
+
+            //Act
+            using (var context = new BankAppDbContext(options))
+            {
+                var account = new Account
+                {
+                    Balance = 100,
+                    Created = systemClockCreateAccount.GetCurrentTime()
+                };
+
+                context.Accounts.Add(account);
+                await context.SaveChangesAsync();
+
+                var x = new CreateInterestCommandHandler(context);
+                await x.Handle(new CreateInterestCommand { AccountId = account.AccountId, DateTimeProvider = systemClockCheckInterest }, new CancellationToken());
+                actual = account.Balance;
+            }
+
+            // Assert equation: 2.3% interest applied daily since last interest credit OR
+            // - since account creation. This test will apply since account creation.
+            // ((2.3% / 365) * account.Balance) * number of days since last credit
+
+            decimal expected = 100.20m;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public async Task Test_Interest_With_Prior_Applied()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<BankAppDbContext>()
+                .UseInMemoryDatabase(databaseName: "Test_Interest_With_Prior_Applied")
+                .Options;
+
+            var accountCreatedClock = Substitute.For<IDateTime>();
+            accountCreatedClock.GetCurrentTime().Returns(new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Local));
+
+            var systemClockCheckInterestInitial = Substitute.For<IDateTime>();
+            systemClockCheckInterestInitial.GetCurrentTime().Returns(new DateTime(2010, 2, 1, 0, 0, 0, DateTimeKind.Local));
+
+            var systemClockCheckInterest = Substitute.For<IDateTime>();
+            systemClockCheckInterest.GetCurrentTime().Returns(new DateTime(2010, 4, 1, 0, 0, 0, DateTimeKind.Local));
+
+            decimal actual = 0;
+
+            //Act
+            using (var context = new BankAppDbContext(options))
+            {
+                var account = new Account
+                {
+                    Balance = 100,
+                    Created = accountCreatedClock.GetCurrentTime()
+                };
+
+                context.Accounts.Add(account);
+                await context.SaveChangesAsync();
+
+                var x = new CreateInterestCommandHandler(context);
+
+                await x.Handle(new CreateInterestCommand { AccountId = account.AccountId, DateTimeProvider = systemClockCheckInterestInitial }, new CancellationToken());
+                await x.Handle(new CreateInterestCommand { AccountId = account.AccountId, DateTimeProvider = systemClockCheckInterest }, new CancellationToken());
+                actual = account.Balance;
+            }
+
+            // Assert equation: 2.3% interest applied daily since last interest credit. 
+            // This check creates an applies an initial interest credit, followed by a second one.
+            // First one will create an intial once since account creation.
+            // Second one will apply days since first interest was applied.
+            // ((2.3% / 365) * account.Balance) * number of days since last credit
+            decimal expected = 100.57m;
+            Assert.AreEqual(expected, actual);
         }
     }
 }

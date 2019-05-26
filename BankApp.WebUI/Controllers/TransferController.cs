@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BankApp.Application.Accounts.Commands.CreateDeposit;
+using BankApp.Application.Accounts.Commands.CreateInterest;
 using BankApp.Application.Accounts.Commands.CreateTransfer;
 using BankApp.Application.Accounts.Commands.CreateWithdraw;
 using BankApp.Application.Accounts.Queries.GetAccountStatistics;
 using BankApp.Application.Accounts.Queries.GetAccountTransactions;
 using BankApp.Application.Accounts.Queries.GetAccountTransferData;
+using BankApp.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +28,6 @@ namespace BankApp.WebUI.Controllers
             _mediator = mediator;
         }
 
-
         public async Task<IActionResult> GetAdditionalTransactions(GetAccountTransactionsQuery query)
         {
             var result = await _mediator.Send(query);
@@ -38,6 +39,7 @@ namespace BankApp.WebUI.Controllers
             return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = customerId }));
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Transfer(CreateTransferCommand query)
         {
@@ -66,6 +68,7 @@ namespace BankApp.WebUI.Controllers
             return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = customerId }));
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Deposit(CreateDepositCommand query)
         {
@@ -94,10 +97,10 @@ namespace BankApp.WebUI.Controllers
             return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = customerId }));
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Withdraw(CreateWithdrawCommand query)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = query.CustomerId }));
@@ -115,6 +118,23 @@ namespace BankApp.WebUI.Controllers
                     ModelState.AddModelError("", ex.Message);
                     return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = query.CustomerId }));
                 }
+            }
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> AddInterest(int accountId, int customerId)
+        {
+            try
+            {
+                await _mediator.Send(new CreateInterestCommand { AccountId = accountId, CustomerId = customerId, DateTimeProvider = new SystemClock() });
+                TempData["successMessage"] = "Successfully applied interest";
+                return RedirectToAction("AccountDetails", "Customer", new { customerId = customerId, accountId = accountId });
+            }
+            catch (Exception ex)
+            {
+                TempData["errorMessage"] = ex.Message;
+                return RedirectToAction("AccountDetails", "Customer", new { customerId = customerId, accountId = accountId });
             }
         }
     }

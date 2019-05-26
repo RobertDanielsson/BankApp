@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BankApp.Application.Customers.Queries.GetCustomersListSearchNew
+namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 {
-    public class GetCustomersListSearchNewQuery : IRequest<GetCustomersListSearchNewViewModel>
+    public class GetCustomersListSearchQuery : IRequest<GetCustomersListSearchViewModel>
     {
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 50;
