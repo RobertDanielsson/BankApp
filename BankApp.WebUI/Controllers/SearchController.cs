@@ -26,13 +26,17 @@ namespace BankApp.WebUI.Controllers
         public async Task<IActionResult> Index(GetCustomersListSearchQuery query)
         {
 
-            if (int.TryParse(query.FirstName, out int customerId))
+            if (int.TryParse(query.Givenname, out int customerId))
             {
                 return RedirectToAction("Index", "Customer", new { customerId = customerId });
             }
             else
             {
                 var model = await _mediator.Send(query);
+                TempData["givenname"] = query.Givenname;
+                TempData["surname"] = query.Surname;
+                TempData["city"] = query.City;
+
                 return View(model);
             }
         }

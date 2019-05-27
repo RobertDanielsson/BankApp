@@ -7,17 +7,20 @@
 <div class="row">
     <form class="col s12" asp-route="customer_edit" method="post">
         <div class="row">
-            <div class="input-field col s12 m5">
+            <div class="input-field col s12 m4 offset-m1">
+                <i class="material-icons prefix">face</i>
                 <input required asp-for="@Model.Givenname" type="text" class="validate">
                 <label asp-for="@Model.Givenname">First Name</label>
                 <span asp-validation-for="@Model.Givenname"></span>
             </div>
-            <div class="input-field col s12 m5">
+            <div class="input-field col s12 m4">
+                <i class="material-icons prefix">face</i>
                 <input required asp-for="@Model.Surname" type="text" class="validate">
                 <label asp-for="@Model.Surname">Last Name</label>
                 <span asp-validation-for="@Model.Surname"></span>
             </div>
             <div class="input-field col s12 m2">
+                <i class="material-icons prefix">list</i>
                 <select required name="gender">
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -28,58 +31,68 @@
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m4 offset-m1">
+                <i class="material-icons prefix">location_on</i>
                 <input required asp-for="@Model.Streetaddress" type="text" class="validate">
                 <label asp-for="@Model.Streetaddress">Street address</label>
                 <span asp-validation-for="@Model.Streetaddress"></span>
             </div>
             <div class="input-field col s12 m4">
+                <i class="material-icons prefix">location_on</i>
                 <input required asp-for="@Model.City" type="text" class="validate">
                 <label asp-for="@Model.City">City</label>
                 <span asp-validation-for="@Model.City"></span>
             </div>
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m2">
+                <i class="material-icons prefix">location_on</i>
                 <input required asp-for="@Model.Zipcode" type="text" class="validate">
                 <label asp-for="@Model.Zipcode">Zipcode</label>
                 <span asp-validation-for="@Model.Zipcode"></span>
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12 m6">
+            <div class="input-field col s12 m5 offset-m1">
+                <i class="material-icons prefix">location_on</i>
                 <input required asp-for="@Model.Country" type="text" class="validate">
                 <label asp-for="@Model.Country">Country</label>
                 <span asp-validation-for="@Model.Country"></span>
             </div>
-            <div class="input-field col s12 m6">
+            <div class="input-field col s12 m5">
+                <i class="material-icons prefix">location_on</i>
                 <input required asp-for="@Model.CountryCode" type="text" class="validate">
                 <label asp-for="@Model.CountryCode">Country code</label>
                 <span asp-validation-for="@Model.CountryCode"></span>
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12 m6">
-                <input asp-for="@Model.Birthday" type="date" class="validate">
+            <div class="input-field col s12 m5 offset-m1">
+                <i class="material-icons prefix">date_range</i>
+                <input asp-for="@Model.Birthday" type="text" class="validate datepicker">
                 <label asp-for="@Model.Birthday">Birthdate</label>
                 <span asp-validation-for="@Model.Birthday"></span>
             </div>
-            <div class="input-field col s12 m6">
+            <div class="input-field col s12 m5">
+                <i class="material-icons prefix">date_range</i>
                 <input asp-for="@Model.NationalId" type="text" class="validate">
                 <label asp-for="@Model.NationalId">National id</label>
                 <span asp-validation-for="@Model.NationalId"></span>
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12 m5">
+            <div class="input-field col s12 m4 offset-m1">
+                <i class="material-icons prefix">email</i>
                 <input asp-for="@Model.Emailaddress" type="email" class="validate">
                 <label asp-for="@Model.Emailaddress">Email</label>
                 <span asp-validation-for="@Model.Emailaddress"></span>
             </div>
             <div class="input-field col s12 m2">
+                <i class="material-icons prefix">contact_phone</i>
                 <input asp-for="@Model.Telephonecountrycode" type="text" class="validate">
                 <label asp-for="@Model.Telephonecountrycode">(tel) Country code</label>
                 <span asp-validation-for="@Model.Telephonecountrycode"></span>
             </div>
-            <div class="input-field col s12 m5">
+            <div class="input-field col s12 m4">
+                <i class="material-icons prefix">contact_phone</i>
                 <input asp-for="@Model.Telephonenumber" type="text" class="validate">
                 <label asp-for="@Model.Telephonenumber">Phone number</label>
                 <span asp-validation-for="@Model.Telephonenumber"></span>
@@ -98,3 +111,5 @@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
+<script defer src="~/js/Datepicker.js"></script>

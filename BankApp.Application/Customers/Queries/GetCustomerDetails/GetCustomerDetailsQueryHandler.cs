@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using BankApp.Domain.Entities;
+using BankApp.Application.Exceptions;
 
 namespace BankApp.Application.Customers.Queries.GetCustomerDetails
 {
@@ -23,7 +24,6 @@ namespace BankApp.Application.Customers.Queries.GetCustomerDetails
 
         public async Task<GetCustomerDetailsViewmodel> Handle(GetCustomerDetailsQuery request, CancellationToken cancellationToken)
         {
-
             //var q = await _context.Customers
             //        .Include(x => x.Dispositions)
             //        .ThenInclude(x => x.Cards)
@@ -34,21 +34,6 @@ namespace BankApp.Application.Customers.Queries.GetCustomerDetails
             //        .ThenInclude(c => c.Account)
             //        .ThenInclude(c => c.PermenentOrder)
             //        .SingleOrDefaultAsync(c => c.CustomerId == request.CustomerId);
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            var query = _context.Customers.Where(x => x.CustomerId == request.CustomerId).AsNoTracking().Select(x => new GetCustomerDetailsViewmodel
-            {
-                Customer = x,
-                Accounts = x.Dispositions.Select(c => c.Account).ToList(),
-                Cards = x.Dispositions.SelectMany(c => c.Cards).ToList(),
-                Loans = x.Dispositions.SelectMany(c => c.Account.Loans).ToList(),
-                PermantentOrders = x.Dispositions.SelectMany(c => c.Account.PermenentOrder).ToList()
-            });
-
-            var model = await query.FirstOrDefaultAsync();
-            model.TotalBalance = model.Accounts.Sum(s => s.Balance);
 
             //var model = new GetCustomerDetailsViewmodel();
             //model.Customer = q;
@@ -84,9 +69,27 @@ namespace BankApp.Application.Customers.Queries.GetCustomerDetails
             //    model.Cards = model.Customer.Dispositions.SelectMany(x => x.Cards).ToList();
             //    model.PermantentOrders = model.Accounts.SelectMany(x => x.PermenentOrder).ToList();
             //}
-            stopwatch.Stop();
-            Console.WriteLine(stopwatch.ElapsedMilliseconds + "ms");
-            return model;
+
+            var query = _context.Customers.Where(x => x.CustomerId == request.CustomerId).AsNoTracking().Select(x => new GetCustomerDetailsViewmodel
+            {
+                Customer = x,
+                Accounts = x.Dispositions.Select(c => c.Account).ToList(),
+                Cards = x.Dispositions.SelectMany(c => c.Cards).ToList(),
+                Loans = x.Dispositions.SelectMany(c => c.Account.Loans).ToList(),
+                PermantentOrders = x.Dispositions.SelectMany(c => c.Account.PermenentOrder).ToList()
+            });
+
+            var model = await query.FirstOrDefaultAsync();
+
+            if(model == null)
+            {
+                throw new CustomerNotFoundException(request.CustomerId);
+            }
+            else
+            {
+                model.TotalBalance = model.Accounts.Sum(s => s.Balance);
+                return model;
+            }
         }
     }
 }

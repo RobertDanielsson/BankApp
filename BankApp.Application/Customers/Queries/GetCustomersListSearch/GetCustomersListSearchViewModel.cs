@@ -7,7 +7,8 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
 {
     public class GetCustomersListSearchViewModel
     {
-        public string FirstName { get; set; }
+        public string Givenname { get; set; }
+        public string Surname { get; set; }
         public string City { get; set; }
         public int FirstPage { get; set; } = 1;
         public int LastPage { get; set; }

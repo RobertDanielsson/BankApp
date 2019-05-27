@@ -6,13 +6,15 @@
 
 <div class="row">
     <div class="col m3"></div>
-    <div class="col s12 m6">
+    <div class="col s12 m12">
         <table class="striped responsive-table">
             <thead>
                 <tr>
                     <th>Email/Username</th>
                     <th>Role</th>
                     <th>Id</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +30,9 @@
                         </td>
                         <td>
                             <a asp-route="user_update" asp-route-oldclaim="@user.Text.Split("*")[1]" asp-route-userid="@user.Value">@user.Value</a>
+                        </td>
+                        <td>
+                            <a class="waves-effect waves-light btn" asp-route="user_update" asp-route-oldclaim="@user.Text.Split("*")[1]" asp-route-userid="@user.Value">Edit</a>
                         </td>
                         <td>
                             <a class="waves-effect waves-light btn modal-trigger red" href="#@user.Value">Delete</a>

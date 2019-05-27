@@ -1,50 +1,59 @@
 ﻿@model BankApp.Application.Accounts.Queries.GetAccountTransferData.GetAccountTransferDataViewModel
 
-@{ 
+@{
     ViewData["Title"] = $"Manage accounts [{Model.Customer.Name}]";
 }
 
 <div class="row">
     <div class="col s12">
         <div class="row">
-            
-
-            <div class="col s12 m6">
-
+            <div class="col s12 m5 offset-m1">
                 <table class="striped responsive-table">
                     <thead>
                         <tr>
                             <th>Account id</th>
                             <th>Balance</th>
-                            <th>Delete</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach (var account in Model.Accounts)
                         {
-                            <tr>
-                                <td>
-                                    @account.Value
-                                </td>
+                        <tr>
+                            <td>
+                                @account.Value
+                            </td>
 
-                                <td>
-                                    @account.Text.Split("-")[1]
-                                </td>
-                            </tr>
+                            <td>
+                                @account.Text.Split("-")[1]
+                            </td>
+                        </tr>
                         }
                     </tbody>
-
                 </table>
             </div>
-            <div class="col s12 m6">
-
+            <div class="col s12 m5">
+                <form class="col s12" asp-controller="Customer" asp-action="AddExistingAccount" method="post">
+                    <div class="col s12 m6">
+                        <input name="accountId" type="text" placeholder="Existing account id" />
+                    </div>
+                    <div class="col s12 m6">
+                        <input type="hidden" name="customerId" value="@Model.Customer.CustomerId" />
+                        <button type="submit" class="waves-effect waves-light btn">Add existing account</button>
+                    </div>
+                </form>
+                <form class="col s12 m6 offset-m6" asp-controller="Customer" asp-action="AddNewAccount" method="post">
+                    <input type="hidden" name="customerId" value="@Model.Customer.CustomerId" />
+                    <button type="submit" class="waves-effect waves-light btn">Create new account</button>
+                </form>
             </div>
         </div>
+
         <div class="row">
             <div class="col s12 center">
                 <a asp-route="customer_details" asp-route-customerId="@Model.Customer.CustomerId" class="waves-effect waves-light btn">Go back</a>
             </div>
         </div>
+
     </div>
 </div>

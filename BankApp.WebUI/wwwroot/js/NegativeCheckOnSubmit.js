@@ -1,6 +1,7 @@
 ﻿function validateMyForm() {
 
     value = document.getElementById("amount").value;
+    value = value.replace(/\./g, '').replace(',', '.');
 
     if (value.includes("-") || isNaN(value) || value <= 0) {
 

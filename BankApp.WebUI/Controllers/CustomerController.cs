@@ -8,6 +8,8 @@ using BankApp.Application.Accounts.Commands.CreateTransfer;
 using BankApp.Application.Accounts.Commands.CreateWithdraw;
 using BankApp.Application.Accounts.Queries.GetAccountStatistics;
 using BankApp.Application.Accounts.Queries.GetAccountTransferData;
+using BankApp.Application.Customers.Commands.AddExistingAccount;
+using BankApp.Application.Customers.Commands.AddNewAccount;
 using BankApp.Application.Customers.Commands.CreateCustomer;
 using BankApp.Application.Customers.Commands.EditCustomer;
 using BankApp.Application.Customers.Queries.GetCustomer;
@@ -37,7 +39,15 @@ namespace BankApp.WebUI.Controllers
         // GET: /<controller>/
         public async Task<IActionResult> Index(int customerId)
         {
-            return View(await _mediator.Send(new GetCustomerDetailsQuery { CustomerId = customerId }));
+            try
+            {
+                return View(await _mediator.Send(new GetCustomerDetailsQuery { CustomerId = customerId }));
+            }
+            catch(Exception ex)
+            {
+                TempData["errorMessage"] = ex.Message;
+                return RedirectToAction("index", "home");
+            }
         }
 
         public IActionResult CreateCustomer()
@@ -56,7 +66,7 @@ namespace BankApp.WebUI.Controllers
                     var result = await _mediator.Send(customer);
                     return RedirectToAction("index", new { customerId = int.Parse(result) });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ModelState.AddModelError("", ex.Message);
                     return View(customer);
@@ -66,9 +76,9 @@ namespace BankApp.WebUI.Controllers
             return View(customer);
         }
 
-        public async Task<IActionResult> EditCustomer(int customerId)
+        public async Task<IActionResult> EditCustomer(GetCustomerForEditQuery query)
         {
-            return View(await _mediator.Send(new GetCustomerForEditQuery { CustomerId = customerId }));
+            return View(await _mediator.Send(query));
         }
 
         [ValidateAntiForgeryToken]
@@ -99,6 +109,40 @@ namespace BankApp.WebUI.Controllers
         public async Task<IActionResult> ManageAccounts(int customerId)
         {
             return View(await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = customerId }));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddExistingAccount(AddExistingAccountCommand command)
+        {
+            try
+            {
+                await _mediator.Send(command);
+                TempData["successMessage"] = "Existing account successfully added";
+                return RedirectToAction("Index", "Customer", new { customerId = command.CustomerId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                TempData["errorMessage"] = ex.Message;
+                return View("ManageAccounts", await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = command.CustomerId }));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddNewAccount(AddNewAccountCommand command)
+        {
+            try
+            {
+                await _mediator.Send(command);
+                TempData["successMessage"] = "New account successfully created and added";
+                return RedirectToAction("Index", "Customer", new { customerId = command.CustomerId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                TempData["errorMessage"] = ex.Message;
+                return View("ManageAccounts", await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = command.CustomerId }));
+            }
         }
 
         public async Task<IActionResult> AccountDetails(int accountId, int customerId)

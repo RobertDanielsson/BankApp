@@ -16,7 +16,7 @@
         @if (prevPage > 2)
         {
             <li>
-                <a asp-route-page="1" asp-route="search_index" asp-route-firstname="@Model.FirstName" asp-route-city="@Model.City">
+                <a asp-route-page="1" asp-route="search_index" asp-route-givenname="@Model.Givenname" asp-route-surname="@Model.Surname" asp-route-city="@Model.City">
                     1
                 </a>
             </li>
@@ -25,7 +25,7 @@
         @if (currPage > 1)
         {
             <li>
-                <a asp-route-page="@prevPage" asp-route="search_index" asp-route-firstname="@Model.FirstName" asp-route-city="@Model.City">
+                <a asp-route-page="@prevPage" asp-route="search_index" asp-route-givenname="@Model.Givenname" asp-route-surname="@Model.Surname" asp-route-city="@Model.City">
                     <i class="material-icons">chevron_left</i>
                 </a>
             </li>
@@ -44,7 +44,7 @@
             if (i > 0 && i <= totalPages)
             {
                 <li>
-                    <a asp-route-page="@i" asp-route="search_index" asp-route-firstname="@Model.FirstName" asp-route-city="@Model.City">
+                    <a asp-route-page="@i" asp-route="search_index" asp-route-givenname="@Model.Givenname" asp-route-surname="@Model.Surname" asp-route-city="@Model.City">
                         @if (i == currPage)
                         {
                             <b>@i</b>
@@ -61,7 +61,7 @@
         @if (currPage < totalPages)
         {
             <li>
-                <a asp-route-page="@nextPage" asp-route="search_index" asp-route-firstname="@Model.FirstName" asp-route-city="@Model.City">
+                <a asp-route-page="@nextPage" asp-route="search_index" asp-route-givenname="@Model.Givenname" asp-route-surname="@Model.Surname" asp-route-city="@Model.City">
                     <i class="material-icons">chevron_right</i>
                 </a>
             </li>
@@ -78,7 +78,7 @@
         @if (currPage < totalPages - 2)
         {
             <li>
-                <a asp-route-page="@totalPages" asp-route="search_index" asp-route-firstname="@Model.FirstName" asp-route-city="@Model.City">
+                <a asp-route-page="@totalPages" asp-route="search_index" asp-route-givenname="@Model.Givenname" asp-route-surname="@Model.Surname" asp-route-city="@Model.City">
                     @totalPages
                 </a>
             </li>

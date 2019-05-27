@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -20,6 +21,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -108,7 +110,21 @@ namespace BankApp.WebUI
                 app.UseDeveloperExceptionPage();
                 //app.UseStatusCodePages();
             }
-            //app.UseHttpsRedirection();
+
+            var supportedCultures = new[]
+                        {
+                new CultureInfo("sv-SE")
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("sv-SE"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
+
             app.UseStaticFiles();
             app.UseAuthentication();
 
@@ -121,6 +137,24 @@ namespace BankApp.WebUI
                       {
                           Controller = "Customer",
                           Action = "Index"
+                      });
+
+                routes.MapRoute(
+                      name: "customer_addExistingAccount",
+                      template: "customer/{customerId}/addexistingaccount",
+                      defaults: new
+                      {
+                          Controller = "Customer",
+                          Action = "AddExistingAccount"
+                      });
+
+                routes.MapRoute(
+                      name: "customer_addNewAccount",
+                      template: "customer/{customerId}/addnewaccount",
+                      defaults: new
+                      {
+                          Controller = "Customer",
+                          Action = "AddNewAccount"
                       });
 
                 routes.MapRoute(

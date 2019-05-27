@@ -24,32 +24,73 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
         {
             var skip = (request.Page - 1) * request.PageSize;
             IOrderedQueryable<Customer> query;
+            var city = request.City;
+            var surName = request.Surname;
+            var givenName = request.Givenname;
 
-            if (request.City != null && request.FirstName != null)
+            if (city != null && givenName != null && surName != null)
             {
                 query = _context.Customers
-                    .Where(c => c.City.Contains(request.City) && c.Givenname.Contains(request.FirstName))
+                    .Where(c => c.City.Contains(city) && c.Givenname.Contains(givenName) && c.Surname.Contains(surName))
                     .Distinct()
                     .OrderBy(c => c.Givenname)
                     .ThenBy(c => c.Surname);
             }
-            else if (request.FirstName == null)
+            else if (givenName != null && surName != null)
             {
                 query = _context.Customers
-                    .Where(c => c.City.Contains(request.City))
+                    .Where(c => c.Givenname.Contains(givenName) && c.Surname.Contains(surName))
                     .Distinct()
                     .OrderBy(c => c.Givenname)
                     .ThenBy(c => c.Surname);
-
+            }
+            else if (givenName != null && city != null)
+            {
+                query = _context.Customers
+                    .Where(c => c.City.Contains(city) && c.Givenname.Contains(givenName))
+                    .Distinct()
+                    .OrderBy(c => c.Givenname)
+                    .ThenBy(c => c.Surname);
+            }
+            else if (surName != null && city != null)
+            {
+                query = _context.Customers
+                    .Where(c => c.City.Contains(city) && c.Surname.Contains(surName))
+                    .Distinct()
+                    .OrderBy(c => c.Givenname)
+                    .ThenBy(c => c.Surname);
+            }
+            else if (city != null)
+            {
+                query = _context.Customers
+                    .Where(c => c.City.Contains(city))
+                    .Distinct()
+                    .OrderBy(c => c.Givenname)
+                    .ThenBy(c => c.Surname);
+            }
+            else if(surName != null)
+            {
+                query = _context.Customers
+                    .Where(c => c.Surname.Contains(surName))
+                    .Distinct()
+                    .OrderBy(c => c.Givenname)
+                    .ThenBy(c => c.Surname);
+            }
+            else if(givenName != null)
+            {
+                query = _context.Customers
+                   .Where(c => c.Givenname.Contains(givenName))
+                   .Distinct()
+                   .OrderBy(c => c.Givenname)
+                   .ThenBy(c => c.Surname);
             }
             else
             {
                 query = _context.Customers
-                    .Where(c => c.Givenname.Contains(request.FirstName))
+                    .Where(c => c.City.Contains(city) || c.Givenname.Contains(givenName) || c.Surname.Contains(surName))
                     .Distinct()
                     .OrderBy(c => c.Givenname)
                     .ThenBy(c => c.Surname);
-
             }
 
             var pageOfResultsTask = query.AsNoTracking().Skip(skip).Take(request.PageSize).ToListAsync();
@@ -71,9 +112,10 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
                 PrevPage = prevPage,
                 NextPage = nextPage,
                 Customers = results,
-                FirstName = request.FirstName,
+                Givenname = request.Givenname,
                 City = request.City,
-                CurrentPage = request.Page
+                CurrentPage = request.Page,
+                Surname = request.Surname
             };
 
             return model;

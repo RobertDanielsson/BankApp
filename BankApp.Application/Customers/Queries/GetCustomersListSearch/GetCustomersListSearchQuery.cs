@@ -9,7 +9,8 @@ namespace BankApp.Application.Customers.Queries.GetCustomersListSearch
     {
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 50;
-        public string FirstName { get; set; }
+        public string Givenname { get; set; }
+        public string Surname { get; set; }
         public string City { get; set; }
     }
 }
