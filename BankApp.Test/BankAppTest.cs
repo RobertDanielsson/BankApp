@@ -182,6 +182,7 @@ namespace BankApp.Test
             var options = new DbContextOptionsBuilder<BankAppDbContext>()
                 .UseInMemoryDatabase(databaseName: "Test_Interest_No_Prior_Applied")
                 .Options;
+
             var systemClockCreateAccount = Substitute.For<IDateTime>();
             systemClockCreateAccount.GetCurrentTime().Returns(new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Local));
             var systemClockCheckInterest = Substitute.For<IDateTime>();
