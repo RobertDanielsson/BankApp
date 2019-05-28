@@ -28,12 +28,10 @@ namespace BankApp.WebUI.Controllers
     public class CustomerController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public CustomerController(IMediator mediator, IMapper mapper)
+        public CustomerController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
         // GET: /<controller>/
@@ -43,7 +41,7 @@ namespace BankApp.WebUI.Controllers
             {
                 return View(await _mediator.Send(new GetCustomerDetailsQuery { CustomerId = customerId }));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData["errorMessage"] = ex.Message;
                 return RedirectToAction("index", "home");
@@ -83,12 +81,12 @@ namespace BankApp.WebUI.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> EditCustomer(EditCustomerCommand query)
+        public async Task<IActionResult> EditCustomer(EditCustomerCommand query, [FromServices] IMapper mapper)
         {
             if (!ModelState.IsValid)
             {
                 var customer = new Customer();
-                return View(_mapper.Map(query, customer));
+                return View(mapper.Map(query, customer));
             }
             else
             {
@@ -101,7 +99,7 @@ namespace BankApp.WebUI.Controllers
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("", ex.Message);
-                    return View(_mapper.Map(query, new Customer()));
+                    return View(mapper.Map(query, new Customer()));
                 }
             }
         }
@@ -114,17 +112,24 @@ namespace BankApp.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddExistingAccount(AddExistingAccountCommand command)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                await _mediator.Send(command);
-                TempData["successMessage"] = "Existing account successfully added";
-                return RedirectToAction("Index", "Customer", new { customerId = command.CustomerId });
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                TempData["errorMessage"] = ex.Message;
                 return View("ManageAccounts", await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = command.CustomerId }));
+            }
+            else
+            {
+                try
+                {
+                    await _mediator.Send(command);
+                    TempData["successMessage"] = "Existing account successfully added";
+                    return RedirectToAction("Index", "Customer", new { customerId = command.CustomerId });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    TempData["errorMessage"] = ex.Message;
+                    return View("ManageAccounts", await _mediator.Send(new GetAccountTransferDataQuery { CustomerId = command.CustomerId }));
+                }
             }
         }
 
